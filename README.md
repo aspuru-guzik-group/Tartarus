@@ -12,7 +12,7 @@ export XTBPATH=${XTBHOME}/share/xtb:${XTBHOME}:${HOME}
 export MANPATH=${MANPATH}:${XTBHOME}/share/man
 ```
 
-The task of designing molecules that dock to proteins requires teh use of **smina**, an efficient method to calcualte bidning affinity of protein-ligand complexes.
+The task of designing molecules that dock to proteins requires teh use of **SMINA**, a method for calcualte docking scores of ligands onto solved structures (proteins).
 
 
 ## Datasets 
