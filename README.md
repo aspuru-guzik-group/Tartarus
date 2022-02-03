@@ -2,7 +2,7 @@
 
 ## Preliminaries
 
-The task of designing organic photovoltaics and emitters will require the use of **xtb**, a program package of semi-empirical quantum mechanical methods, and **CREST**, a utility of xtb used to sample molecular conformers. 
+The task of designing organic photovoltaics and emitters will require the use of **XTB**, a program package of semi-empirical quantum mechanical methods, and **CREST**, a utility of xtb used to sample molecular conformers. 
 
 The binaries are provided in `xtb/` directory, and can be sourced using
 ```bash
