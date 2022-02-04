@@ -1,8 +1,8 @@
 # Tartarus: The Next Generation of Benchmarks for Inverse Molecular Design
 
-## Preliminaries
+## Installing XTB and CREST
 
-The task of designing organic photovoltaics and emitters will require the use of **XTB**, a program package of semi-empirical quantum mechanical methods, and **CREST**, a utility of xtb used to sample molecular conformers. 
+The task of designing organic photovoltaics and emitters will require the use of [**XTB**](https://github.com/grimme-lab/xtb), a program package of semi-empirical quantum mechanical methods, and [**CREST**](https://github.com/grimme-lab/crest), a utility of xtb used to sample molecular conformers. 
 
 The binaries are provided in `xtb/` directory, and can be sourced using
 ```bash
@@ -12,7 +12,9 @@ export XTBPATH=${XTBHOME}/share/xtb:${XTBHOME}:${HOME}
 export MANPATH=${MANPATH}:${XTBHOME}/share/man
 ```
 
-The task of designing molecules that dock to proteins requires teh use of **SMINA**, a method for calcualte docking scores of ligands onto solved structures (proteins).
+## Installing SMINA
+
+The task of designing molecules that dock to proteins requires the use of [**SMINA**](https://sourceforge.net/projects/smina/), a method for calcualte docking scores of ligands onto solved structures (proteins).
 
 
 ## Datasets 
