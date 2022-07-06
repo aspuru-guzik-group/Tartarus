@@ -4,7 +4,7 @@
 
 The task of designing organic photovoltaics and emitters will require the use of [**XTB**](https://github.com/grimme-lab/xtb), a program package of semi-empirical quantum mechanical methods, and [**CREST**](https://github.com/grimme-lab/crest), a utility of xtb used to sample molecular conformers. 
 
-The binaries are provided in `xtb/` directory, and can be sourced using
+The binaries are provided in [here](https://github.com/grimme-lab/xtb/releases). Place in home directory, and the software can be sourced using
 ```bash
 export XTBHOME=${HOME}/xtb
 export PATH=${PATH}:${XTBHOME}/bin
@@ -27,6 +27,7 @@ All datasets are found in the [datasets](datasets/) directory.
 | Designing OPV | `unbiased_hce.csv` | 1,000            | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;) | Dipole (&#8593;) | Combined objective (&#8593;) |
 | Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) | Time (s) |
 | Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8593;) | 4LDE (&#8593;) | Time (s) | |
+| Designing drugs | `reactivity.csv`      | 60,828          | |  | |  | |
 
 
 ## Getting started 
@@ -34,7 +35,7 @@ All datasets are found in the [datasets](datasets/) directory.
 
 ### Designing organic photovoltaics
 
-To use the evaluation function, load either the full xtb calculation from the `hce` module, or use the `surrogate` model, with pretrained weights.
+To use the evaluation function, load either the full xtb calculation from the `pce` module, or use the surrogate model, with pretrained weights.
 
 ```python
 import pandas as pd
@@ -43,13 +44,65 @@ smiles = data['smiles'].tolist()
 smi = smiles[0]
 
 ## use full xtb calculation in hce module
-from tartarus.hce import hce
-dipole, hl_val, lumo_val, combined = hce.get_prop_material(smi)
+from tartarus import pce
+dipole, hl_gap, lumo, combined, pce_1, pce_2, sas = pce.get_properties(smi)
 
-## use surrogate module
-from tartarus.hce import surrogate
-dipole, hl_val, lumo_val, combined = surrogate.calc_properties_with_surrogate(smi)
+## use pretrained surrogate model
+dipole, hl_gap, lumo, combined = pce.get_surrogate_properties(smi)
 ```
+
+
+### Designing organic emitters
+
+```python
+import pandas as pd
+data = pd.read_csv('./datasets/gdb13.csv')   # or ./dataset/unbiased_hce.csv
+smiles = data['smiles'].tolist()
+smi = smiles[0]
+
+## use full xtb calculation in hce module
+from tartarus import tadf
+st, osc, combined = tadf.get_properties(smi)
+```
+
+
+### Design drug molecule
+
+```python
+import pandas as pd
+data = pd.read_csv('./datasets/docking.csv')   # or ./dataset/unbiased_hce.csv
+smiles = data['smiles'].tolist()
+smi = smiles[0]
+
+## calculating binding affinity for each protein
+from tartarus import docking
+st, osc, combined = docking.get_1syh_score(smi)
+st, osc, combined = docking.get_6y2f_score(smi)
+st, osc, combined = docking.get_4lde_score(smi)
+```
+
+
+### Designing self-reacting molecule
+
+```python
+import pandas as pd
+data = pd.read_csv('./datasets/reactivity.csv')   # or ./dataset/unbiased_hce.csv
+smiles = data['smiles'].tolist()
+smi = smiles[0]
+
+## calculating binding affinity for each protein
+from tartarus import reactivity
+activation_energy, reaction_energy, sa_score = reactivity.get_properties(smi)
+```
+
+
+
+
+
+
+
+
+
 
 
 
