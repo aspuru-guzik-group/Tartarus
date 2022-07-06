@@ -1,0 +1,62 @@
+CRYST1   58.908   96.353   48.530  90.00  90.00  90.00 P 21 21 2     1
+HETATM    1  C1  CPW A 501      21.733  14.382  24.655  1.00  4.59           C  
+HETATM    2  N1  CPW A 501      21.743  14.453  23.190  1.00  6.10           N  
+HETATM    3  O1  CPW A 501      23.509  15.967  23.148  1.00  5.84           O  
+HETATM    4  C2  CPW A 501      22.701  15.232  22.574  1.00  6.29           C  
+HETATM    5  N2  CPW A 501      22.697  15.131  21.211  1.00  5.33           N  
+HETATM    6  O2  CPW A 501      22.051  14.356  19.179  1.00  7.02           O  
+HETATM    7  C3  CPW A 501      20.838  13.710  22.462  1.00  5.81           C  
+HETATM    8  N3  CPW A 501      22.553  12.018  24.921  1.00  5.77           N1+
+HETATM    9  O3  CPW A 501      23.446  14.826  27.069  1.00  5.08           O1-
+HETATM   10  C4  CPW A 501      20.874  13.658  21.112  1.00  5.47           C  
+HETATM   11  O4  CPW A 501      22.901  12.739  27.504  1.00  4.27           O  
+HETATM   12  C5  CPW A 501      21.896  14.395  20.394  1.00  4.58           C  
+HETATM   13  C6  CPW A 501      19.697  12.865  23.000  1.00  5.00           C  
+HETATM   14  C7  CPW A 501      19.222  12.085  21.779  1.00  5.65           C  
+HETATM   15  C8  CPW A 501      19.794  12.769  20.541  1.00  3.56           C  
+HETATM   16  C9  CPW A 501      22.880  13.494  25.196  1.00  5.14           C  
+HETATM   17  C10 CPW A 501      23.082  13.687  26.709  1.00  4.99           C  
+HETATM   18  HN2 CPW A 501      23.422  15.655  20.743  1.00  0.00           H  
+HETATM   19  HC9 CPW A 501      23.822  13.648  24.670  1.00  0.00           H  
+HETATM   20 H1_1 CPW A 501      20.774  14.012  25.015  1.00  0.00           H  
+HETATM   21 H1_2 CPW A 501      21.830  15.398  25.044  1.00  0.00           H  
+HETATM   22 H3_1 CPW A 501      23.302  11.428  25.257  1.00  0.00           H  
+HETATM   23 H3_2 CPW A 501      21.689  11.752  25.373  1.00  0.00           H  
+HETATM   24 H3_3 CPW A 501      22.461  11.868  23.924  1.00  0.00           H  
+HETATM   25 H6_1 CPW A 501      18.915  13.526  23.367  1.00  0.00           H  
+HETATM   26 H6_2 CPW A 501      19.978  12.184  23.804  1.00  0.00           H  
+HETATM   27 H7_1 CPW A 501      18.135  12.016  21.746  1.00  0.00           H  
+HETATM   28 H7_2 CPW A 501      19.596  11.061  21.834  1.00  0.00           H  
+HETATM   29 H8_1 CPW A 501      20.191  12.041  19.834  1.00  0.00           H  
+HETATM   30 H8_2 CPW A 501      19.052  13.376  20.022  1.00  0.00           H  
+CONECT    1    2   16   20   21
+CONECT    2    1    4    7
+CONECT    3    4
+CONECT    4    2    3    5
+CONECT    5    4   12   18
+CONECT    6   12
+CONECT    7    2   10   13
+CONECT    8   22   23   24   16
+CONECT    9   17
+CONECT   10    7   12   15
+CONECT   11   17
+CONECT   12    5   10    6
+CONECT   13    7   14   25   26
+CONECT   14   13   15   27   28
+CONECT   15   10   14   29   30
+CONECT   16    1    8   17   19
+CONECT   17   16    9   11
+CONECT   18    5
+CONECT   19   16
+CONECT   20    1
+CONECT   21    1
+CONECT   22    8
+CONECT   23    8
+CONECT   24    8
+CONECT   25   13
+CONECT   26   13
+CONECT   27   14
+CONECT   28   14
+CONECT   29   15
+CONECT   30   15
+END
