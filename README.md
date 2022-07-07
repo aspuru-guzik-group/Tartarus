@@ -52,7 +52,7 @@ dipole, hl_gap, lumo, combined = pce.get_surrogate_properties(smi)
 ```
 
 
-### Designing organic emitters
+### Designing Organic Emitters
 
 ```python
 import pandas as pd
@@ -74,7 +74,7 @@ data = pd.read_csv('./datasets/docking.csv')   # or ./dataset/unbiased_hce.csv
 smiles = data['smiles'].tolist()
 smi = smiles[0]
 
-## calculating binding affinity for each protein
+## Design of Protein Ligands 
 from tartarus import docking
 st, osc, combined = docking.get_1syh_score(smi)
 st, osc, combined = docking.get_6y2f_score(smi)
@@ -82,7 +82,7 @@ st, osc, combined = docking.get_4lde_score(smi)
 ```
 
 
-### Designing self-reacting molecule
+### Design of Chemical Reaction Substrates
 
 ```python
 import pandas as pd
