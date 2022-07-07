@@ -66,7 +66,7 @@ st, osc, combined = tadf.get_properties(smi)
 ```
 
 
-### Design drug molecule
+### Design of drug molecule
 
 ```python
 import pandas as pd
