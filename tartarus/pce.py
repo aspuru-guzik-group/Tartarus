@@ -33,7 +33,7 @@ def get_properties(smile):
         f.writelines([smile])
 
     # Prepare the input file: 
-    os.system('obabel test.smi --gen3D -O test.xyz'.format(smile))
+    os.system('obabel test.smi --gen3D -O test.xyz')
 
     # Run the preliminary xtb: 
     command_pre = 'CHARGE={};xtb {} --gfn 0 --opt normal -c $CHARGE --iterations 4000'.format(charge, 'test.xyz')

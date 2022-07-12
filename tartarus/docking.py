@@ -147,8 +147,8 @@ def get_score(smi, docking_target='1syh'):
         )
 
         command = (
-            f'{path}/smina.static -r ./{path}/{docking_target}/prot.pdb '
-            f'-l hit1.pdb --autobox_ligand ./{path}/{docking_target}/lig_.pdb '
+            f'{path}/smina.static -r {path}/{docking_target}/prot.pdb '
+            f'-l hit1.pdb --autobox_ligand {path}/{docking_target}/lig_.pdb '
             '--autobox_add 2 --scoring vina -o dock_1.pdb --log dock_1.log '
             f'--cpu {cpu_count} --num_modes 1 --exhaustiveness 10'
         )

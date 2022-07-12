@@ -207,7 +207,7 @@ class computation:
         self.xtb()
         self.clean_files(thorough=True)
         self.pyscf()
-        os.system(f'rm -rf MRMSD {self.file} gfnff_adjacency')
+        os.system(f'rm -rf MRMSD {self.file} gfnff_adjacency tmp*')
         return
     
     def pre_xtb(self):
