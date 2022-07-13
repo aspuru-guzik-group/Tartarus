@@ -2,6 +2,7 @@ import os
 import time 
 import multiprocessing
 import inspect
+from .utils import run_command
 
 from rdkit import Chem 
 from rdkit.Chem import MolFromSmiles
@@ -132,12 +133,14 @@ def apply_filters(smi):
         return False 
 
 
-def get_score(smi, docking_target='1syh'): 
+def get_score(smi, docking_target='1syh', verbose=False): 
+
+    system = lambda x: run_command(x, verbose)
 
     try: 
         with open('test.smi', 'w') as f: 
             f.writelines(smi)
-        os.system('obabel test.smi --gen3D -O hit1.pdb')
+        system('obabel test.smi --gen3D -O hit1.pdb')
         
         cpu_count = multiprocessing.cpu_count()
 
@@ -152,7 +155,7 @@ def get_score(smi, docking_target='1syh'):
             '--autobox_add 2 --scoring vina -o dock_1.pdb --log dock_1.log '
             f'--cpu {cpu_count} --num_modes 1 --exhaustiveness 10'
         )
-        os.system(command)
+        system(command)
         
         # Read in the results:  
         with open('./dock_1.log', 'r') as f: 
@@ -169,29 +172,29 @@ def get_score(smi, docking_target='1syh'):
     
         
     # Delete log files: 
-    os.system('rm dock_1.log dock_1.pdb test.smi hit1.pdb')
+    system('rm dock_1.log dock_1.pdb test.smi hit1.pdb')
     
     return min(scores)
 
 
-def get_1syh_score(smi): 
+def get_1syh_score(smi: str, verbose: bool = False): 
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
-        score_1 = get_score(smi=smi, docking_target='1syh') # '4lde', '6y2f', '1syh'
-        return -score_1 # MINUS SIGN FOR OPTIMIZATION! 
+        score = get_score(smi=smi, docking_target='1syh', verbose=verbose) # '4lde', '6y2f', '1syh'
+        return -score # MINUS SIGN FOR OPTIMIZATION! 
     else: 
         return -10**4
 
-def get_6y2f_score(smi): 
+def get_6y2f_score(smi: str, verbose: bool = False): 
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
-        score_1 = get_score(smi=smi, docking_target='6y2f') # '4lde', '6y2f', '1syh'
-        return -score_1 # MINUS SIGN FOR OPTIMIZATION! 
+        score = get_score(smi=smi, docking_target='6y2f', verbose=verbose) # '4lde', '6y2f', '1syh'
+        return -score # MINUS SIGN FOR OPTIMIZATION! 
     else: 
         return -10**4
 
-def get_4lde_score(smi): 
+def get_4lde_score(smi: str, verbose: bool = False): 
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
-        score_1 = get_score(smi=smi, docking_target='4lde') # '4lde', '6y2f', '1syh'
-        return -score_1 # MINUS SIGN FOR OPTIMIZATION! 
+        score = get_score(smi=smi, docking_target='4lde', verbose=verbose) # '4lde', '6y2f', '1syh'
+        return -score # MINUS SIGN FOR OPTIMIZATION! 
     else: 
         return -10**4
 

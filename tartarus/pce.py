@@ -1,15 +1,15 @@
 import os, sys
-import numpy as np
 import inspect
+from .utils import run_command
 
 import rdkit
 from rdkit.Chem import AllChem, DataStructs
 from rdkit.Chem import AllChem as Chem
-
 from rdkit.Chem import RDConfig
 sys.path.append(os.path.join(RDConfig.RDContribDir, 'SA_Score'))
 import sascorer
 
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -18,7 +18,7 @@ import torch.nn as nn
 def gaussian(x, A, B):
     return A * np.exp(-x** 2 / B)
 
-def get_properties(smile): 
+def get_properties(smile, verbose=False): 
     # Create mol object
     mol = Chem.MolFromSmiles(smile)
     mol = Chem.AddHs(mol)
@@ -32,23 +32,25 @@ def get_properties(smile):
     with open('test.smi', 'w') as f: 
         f.writelines([smile])
 
+    system = lambda x: run_command(x, verbose)
+    
     # Prepare the input file: 
-    os.system('obabel test.smi --gen3D -O test.xyz')
+    system('obabel test.smi --gen3D -O test.xyz')
 
     # Run the preliminary xtb: 
     command_pre = 'CHARGE={};xtb {} --gfn 0 --opt normal -c $CHARGE --iterations 4000'.format(charge, 'test.xyz')
-    os.system(command_pre)
-    os.system("rm ./gfnff_charges ./gfnff_topo")
+    system(command_pre)
+    system("rm ./gfnff_charges ./gfnff_topo")
 
     # Run crest conformer ensemble
     command_crest = 'CHARGE={};crest {} -gff -mquick -chrg $CHARGE --noreftopo'.format(charge, 'xtbopt.xyz')
-    os.system(command_crest)
-    os.system('rm ./gfnff_charges ./gfnff_topo')
-    os.system('head -n {} crest_conformers.xyz > crest_best.xyz'.format(atom_number+2))
+    system(command_crest)
+    system('rm ./gfnff_charges ./gfnff_topo')
+    system('head -n {} crest_conformers.xyz > crest_best.xyz'.format(atom_number+2))
 
     # Run the calculation: 
     command = 'CHARGE={};xtb {} --opt normal -c $CHARGE --iterations 4000 > out_dump'.format(charge, 'crest_best.xyz')
-    os.system(command)
+    system(command)
 
     # Read the output: 
     with open('./out_dump', 'r') as f: 
@@ -110,10 +112,10 @@ def get_properties(smile):
             jsc_2 = 415.22529811760637
         pce_2 = 100 * voc_2 * 0.65 * jsc_2 / Pin
 
-    # Delete all the output files: 
-    os.system('rm xtbopt.log xtbopt.xyz xtbrestart xtbtopo.mol charges out_dump test.smi test.xyz wbo .xtboptok')
-    os.system('rm bondlengths coord coord.original cregen_0.tmp  cre_members crest_conformers.xyz crest.energies crest_rotamers.xyz struc.xyz .CHRG .history.xyz crest_best.xyz')
-    os.system('rm -rf MRMSD gfnff_adjacency')
+    # Delete all the output files:  
+    system('rm xtbopt.log xtbopt.xyz xtbrestart xtbtopo.mol charges out_dump test.smi test.xyz wbo .xtboptok')
+    system('rm bondlengths coord coord.original cregen_0.tmp  cre_members crest_conformers.xyz crest.energies crest_rotamers.xyz struc.xyz .CHRG .history.xyz crest_best.xyz')
+    system('rm -rf MRMSD gfnff_adjacency')
 
     return mol_dipole_val, homo_lumo_val, lumo_val, function_, pce_1, pce_2, sas
 

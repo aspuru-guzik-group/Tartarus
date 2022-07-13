@@ -1,5 +1,6 @@
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from .utils import suppress_output
 
 from rdkit import rdBase
 rdBase.DisableLog('rdApp.error')
@@ -194,7 +195,8 @@ class molecule:
 
 
 class computation:
-    def __init__(self, file, name, atom_count):
+    def __init__(self, file, name, atom_count, verbose=False):
+        self.verbose = verbose
         self.file = file
         self.name = name
         self.atom_count = atom_count
@@ -238,38 +240,39 @@ class computation:
         return
     
     def pyscf(self):
-        # TD-DFT single point
-        self.mole = gto.Mole()
-        self.mole.atom = self.file
-        self.mole.basis = '6-31G*'
-        self.mole.basis = {'H': '6-31G*', 'He': '6-31G*', 'Li': '6-31G*', 'Be': '6-31G*', 'B': '6-31G*', 'C': '6-31G*', 'N': '6-31G*', 'O': '6-31G*', 'F': '6-31G*', 'Ne': '6-31G*', 'Na': '6-31G*', 'Mg': '6-31G*', 'Al': '6-31G*', 'Si': '6-31G*', 'P': '6-31G*', 'S': '6-31G*', 'Cl': '6-31G*', 'Ar': '6-31G*', 'K': '6-31G*', 'Ca': '6-31G*', 'Sc': '6-31G*', 'Ti': '6-31G*', 'V': '6-31G*', 'Cr': '6-31G*', 'Mn': '6-31G*', 'Fe': '6-31G*', 'Co': '6-31G*', 'Ni': '6-31G*', 'Cu': '6-31G*', 'Zn': '6-31G*', 'Ga': '6-31G*', 'Ge': '6-31G*', 'As': '6-31G*', 'Se': '6-31G*', 'Br': '6-31G*', 'Kr': '6-31G*', 'I': 'lanl2dz'}
-        self.mole.ecp = 'lanl2dz'
-        self.mole.build()
-        # Singlets
-        self.method = dft.RKS(self.mole).density_fit(auxbasis='def2-universal-jkfit')
-        self.method.xc = 'B3LYP'
-        self.method.max_cycle = 512
-        self.method.grids.level = 0
-        self.method.conv_tol = 1E-7
-        self.method.kernel()
-        self.calculation = tddft.TDA(self.method)
-        self.calculation.nstates = 2
-        self.calculation.kernel()
-        self.excitation_energies_singlets = self.calculation.e * electronvolt
-        self.oscillator_strength_singlets = self.calculation.oscillator_strength(gauge='length')
-        # Triplets
-        self.calculation.singlet = False
-        self.calculation.kernel()
-        self.excitation_energies_triplets = self.calculation.e * electronvolt
-        # Gather results
-        self.fluorescence_energy = min(self.excitation_energies_singlets)
-        self.singlet_triplet_gap = min(self.excitation_energies_singlets) - min(self.excitation_energies_triplets)
-        self.oscillator_strength = self.oscillator_strength_singlets[0]
-        self.results = np.array([self.fluorescence_energy, self.singlet_triplet_gap, self.oscillator_strength])
+        with suppress_output(self.verbose):
+            # TD-DFT single point
+            self.mole = gto.Mole()
+            self.mole.atom = self.file
+            self.mole.basis = '6-31G*'
+            self.mole.basis = {'H': '6-31G*', 'He': '6-31G*', 'Li': '6-31G*', 'Be': '6-31G*', 'B': '6-31G*', 'C': '6-31G*', 'N': '6-31G*', 'O': '6-31G*', 'F': '6-31G*', 'Ne': '6-31G*', 'Na': '6-31G*', 'Mg': '6-31G*', 'Al': '6-31G*', 'Si': '6-31G*', 'P': '6-31G*', 'S': '6-31G*', 'Cl': '6-31G*', 'Ar': '6-31G*', 'K': '6-31G*', 'Ca': '6-31G*', 'Sc': '6-31G*', 'Ti': '6-31G*', 'V': '6-31G*', 'Cr': '6-31G*', 'Mn': '6-31G*', 'Fe': '6-31G*', 'Co': '6-31G*', 'Ni': '6-31G*', 'Cu': '6-31G*', 'Zn': '6-31G*', 'Ga': '6-31G*', 'Ge': '6-31G*', 'As': '6-31G*', 'Se': '6-31G*', 'Br': '6-31G*', 'Kr': '6-31G*', 'I': 'lanl2dz'}
+            self.mole.ecp = 'lanl2dz'
+            self.mole.build()
+            # Singlets
+            self.method = dft.RKS(self.mole).density_fit(auxbasis='def2-universal-jkfit')
+            self.method.xc = 'B3LYP'
+            self.method.max_cycle = 512
+            self.method.grids.level = 0
+            self.method.conv_tol = 1E-7
+            self.method.kernel()
+            self.calculation = tddft.TDA(self.method)
+            self.calculation.nstates = 2
+            self.calculation.kernel()
+            self.excitation_energies_singlets = self.calculation.e * electronvolt
+            self.oscillator_strength_singlets = self.calculation.oscillator_strength(gauge='length')
+            # Triplets
+            self.calculation.singlet = False
+            self.calculation.kernel()
+            self.excitation_energies_triplets = self.calculation.e * electronvolt
+            # Gather results
+            self.fluorescence_energy = min(self.excitation_energies_singlets)
+            self.singlet_triplet_gap = min(self.excitation_energies_singlets) - min(self.excitation_energies_triplets)
+            self.oscillator_strength = self.oscillator_strength_singlets[0]
+            self.results = np.array([self.fluorescence_energy, self.singlet_triplet_gap, self.oscillator_strength])
         return
     
 
-def get_properties(smi): 
+def get_properties(smi: str, verbose: bool=False): 
     
     start_time = time.time()
     try: 
@@ -277,7 +280,7 @@ def get_properties(smi):
         mol = molecule(smi, 'random_name')
         mol.write_xyz()
 
-        comp     = computation(mol.file, mol.name, mol.atom_count)
+        comp     = computation(mol.file, mol.name, mol.atom_count, verbose=verbose)
         results_ = comp.results # results_[0]=color; results_[1]=S-T; results_[2]=Oscillator Strength;        
         
         os.system('rm -rf core.*')

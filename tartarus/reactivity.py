@@ -405,10 +405,8 @@ def substructure_violations(mol):
 
     return violation
 
-import rdkit
-from rdkit import Chem
     
-def get_properties(smi): 
+def get_properties(smi: str, verbose: bool = False): 
 
     # Check if substructure is present & there are no fragment violations: 
     mol = Chem.MolFromSmiles(smi)
