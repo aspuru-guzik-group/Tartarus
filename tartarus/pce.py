@@ -1,5 +1,7 @@
 import os, sys
 import inspect
+from pathlib import Path
+import tempfile
 from .utils import run_command
 
 import rdkit
@@ -18,7 +20,13 @@ import torch.nn as nn
 def gaussian(x, A, B):
     return A * np.exp(-x** 2 / B)
 
-def get_properties(smile, verbose=False): 
+def get_properties(smile, verbose=False, scratch: str='/tmp'): 
+    # Create and switch to temporary directory
+    owd = Path.cwd()
+    scratch_path = Path(scratch)
+    tmp_dir = tempfile.TemporaryDirectory(dir=scratch_path)
+    os.chdir(tmp_dir.name)
+
     # Create mol object
     mol = Chem.MolFromSmiles(smile)
     mol = Chem.AddHs(mol)
@@ -112,10 +120,13 @@ def get_properties(smile, verbose=False):
             jsc_2 = 415.22529811760637
         pce_2 = 100 * voc_2 * 0.65 * jsc_2 / Pin
 
+    os.chdir(owd)
+    tmp_dir.cleanup()
+
     # Delete all the output files:  
-    system('rm xtbopt.log xtbopt.xyz xtbrestart xtbtopo.mol charges out_dump test.smi test.xyz wbo .xtboptok')
-    system('rm bondlengths coord coord.original cregen_0.tmp  cre_members crest_conformers.xyz crest.energies crest_rotamers.xyz struc.xyz .CHRG .history.xyz crest_best.xyz')
-    system('rm -rf MRMSD gfnff_adjacency')
+    # system('rm xtbopt.log xtbopt.xyz xtbrestart xtbtopo.mol charges out_dump test.smi test.xyz wbo .xtboptok')
+    # system('rm bondlengths coord coord.original cregen_0.tmp  cre_members crest_conformers.xyz crest.energies crest_rotamers.xyz struc.xyz .CHRG .history.xyz crest_best.xyz')
+    # system('rm -rf MRMSD gfnff_adjacency')
 
     return mol_dipole_val, homo_lumo_val, lumo_val, function_, pce_1, pce_2, sas
 

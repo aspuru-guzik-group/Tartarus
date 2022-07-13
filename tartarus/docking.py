@@ -2,6 +2,8 @@ import os
 import time 
 import multiprocessing
 import inspect
+import tempfile
+from pathlib import Path
 from .utils import run_command
 
 from rdkit import Chem 
@@ -133,10 +135,14 @@ def apply_filters(smi):
         return False 
 
 
-def get_score(smi, docking_target='1syh', verbose=False): 
+def get_score(smi, docking_target='1syh', verbose=False, scratch='/tmp'): 
+    # Create and switch to temporary directory
+    owd = Path.cwd()
+    scratch_path = Path(scratch)
+    tmp_dir = tempfile.TemporaryDirectory(dir=scratch_path)
+    os.chdir(tmp_dir.name)
 
     system = lambda x: run_command(x, verbose)
-
     try: 
         with open('test.smi', 'w') as f: 
             f.writelines(smi)
@@ -168,7 +174,11 @@ def get_score(smi, docking_target='1syh', verbose=False):
             A = [x for x in A if x != '']
             scores.append(float(A[1]))
     except: 
-        scores = [10**6]        
+        scores = 10**6
+
+    # Remove temporary directory
+    os.chdir(owd)
+    tmp_dir.cleanup()
     
         
     # Delete log files: 

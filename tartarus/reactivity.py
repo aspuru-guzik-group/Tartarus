@@ -19,6 +19,8 @@ from polanyi.interpolation import interpolate_geodesic
 from polanyi.io import read_xyz
 from polanyi.workflow import crest_constrained, opt_ts_python, opt_xtb
 from polanyi.xtb import opt_crest
+
+import rdkit
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import RDConfig
