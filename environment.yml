@@ -6,7 +6,7 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
-  - blas=1.0=openblas
+  - blas=1.0=mkl
   - boost=1.74.0=py38h2b96118_5
   - boost-cpp=1.74.0=h9359b55_0
   - bottleneck=1.3.5=py38h7deecbd_0
@@ -16,7 +16,7 @@ dependencies:
   - certifi=2022.6.15=py38h578d9bd_0
   - cffi=1.15.0=py38hd667e15_1
   - crest=2.12=h9d67668_0
-  - cudatoolkit=10.1.243=h6bb024c_0
+  - cudatoolkit=11.3.1=h2bc3f7f_2
   - cycler=0.11.0=pyhd8ed1ab_0
   - expat=2.4.8=h27087fc_0
   - fontconfig=2.14.0=h8e229c2_0
@@ -28,16 +28,15 @@ dependencies:
   - jpeg=9e=h166bdaf_1
   - kiwisolver=1.4.2=py38h295c915_0
   - ld_impl_linux-64=2.38=h1181459_1
-  - libblas=3.9.0=15_linux64_openblas
-  - libcblas=3.9.0=15_linux64_openblas
+  - libblas=3.9.0=14_linux64_mkl
+  - libcblas=3.9.0=14_linux64_mkl
   - libffi=3.3=he6710b0_2
   - libgcc-ng=11.2.0=h1234567_1
   - libgfortran-ng=12.1.0=h69a702a_16
   - libgfortran5=12.1.0=hdcd56e2_16
   - libgomp=11.2.0=h1234567_1
   - libiconv=1.16=h516909a_0
-  - liblapack=3.9.0=15_linux64_openblas
-  - libopenblas=0.3.20=pthreads_h78a6416_0
+  - liblapack=3.9.0=14_linux64_mkl
   - libpng=1.6.37=h21135ba_2
   - libstdcxx-ng=11.2.0=h1234567_1
   - libtiff=4.0.10=hc3755c2_1005
@@ -48,10 +47,7 @@ dependencies:
   - matplotlib-base=3.4.3=py38hf4fb855_1
   - mkl=2022.0.1=h06a4308_117
   - ncurses=6.3=h5eee18b_3
-  - ninja=1.10.2=h06a4308_5
-  - ninja-base=1.10.2=hd09550d_5
-  - nomkl=3.0=0
-  - numexpr=2.8.0=py38h97b1c41_102
+  - numexpr=2.8.0=mkl_py38h9924f95_2
   - numpy=1.22.3=py38h99721a1_2
   - olefile=0.46=pyh9f0ad1d_1
   - openbabel=3.1.1=py38hf4b5c11_1
@@ -68,7 +64,8 @@ dependencies:
   - python=3.8.13=h12debd9_0
   - python-dateutil=2.8.2=pyhd8ed1ab_0
   - python_abi=3.8=2_cp38
-  - pytorch=1.4.0=py3.8_cuda10.1.243_cudnn7.6.3_0
+  - pytorch=1.12.0=py3.8_cuda11.3_cudnn8.3.2_0
+  - pytorch-mutex=1.0=cuda
   - pytz=2022.1=pyhd8ed1ab_0
   - rdkit=2022.03.2=py38ha829ea6_0
   - readline=8.1.2=h7f8727e_1
@@ -79,6 +76,7 @@ dependencies:
   - sqlite=3.38.5=hc218d9a_0
   - tk=8.6.12=h1ccaba5_0
   - tornado=5.1.1=py38h1e0a361_2
+  - typing_extensions=4.1.1=pyh06a4308_0
   - wheel=0.37.1=pyhd3eb1b0_0
   - xorg-kbproto=1.0.7=h7f98852_1002
   - xorg-libice=1.0.10=h7f98852_0
@@ -112,3 +110,4 @@ dependencies:
     - scipy==1.8.1
     - threadpoolctl==3.1.0
     - wurlitzer==3.0.2
+    

@@ -3,8 +3,8 @@ conda create --name tartarus python=3.8 -y
 conda activate tartarus
 
 # should be installed already
-conda install -c conda-forge rdkit openbabel -y
 conda install -c pytorch pytorch -y     # install using conda to avoid conflict with libxtb
+conda install -c conda-forge rdkit openbabel -y
 
 conda install -c conda-forge xtb-python -y
 conda install -c conda-forge crest -y

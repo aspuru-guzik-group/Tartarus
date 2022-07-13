@@ -408,17 +408,17 @@ def substructure_violations(mol):
     return violation
 
     
-def get_properties(smi: str, verbose: bool = False): 
+def get_properties(smi: str, verbose: bool = False, n_procs: int = 1): 
 
     # Check if substructure is present & there are no fragment violations: 
     mol = Chem.MolFromSmiles(smi)
     call_ = substructure_preserver(mol) # False = =Bad!
     substr_vio = substructure_violations(mol) # True == Bad!
     if substr_vio == True or call_ == False: 
-        return -10**4, -10**4, -10**4
+        return -10**4, -10**4, 10**4
     
     # Normal calculation can procedd (no fitness violations): 
-    smiles_stereo, activation_energy, reaction_energy, sa_score, run_time = run_reaction(smi, n_procs=24)
+    smiles_stereo, activation_energy, reaction_energy, sa_score, run_time = run_reaction(smi, n_procs=n_procs)
 
     return activation_energy, reaction_energy, sa_score
     # print('Output is: ', out)

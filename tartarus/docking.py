@@ -174,7 +174,7 @@ def get_score(smi, docking_target='1syh', verbose=False, scratch='/tmp'):
             A = [x for x in A if x != '']
             scores.append(float(A[1]))
     except: 
-        scores = 10**6
+        scores = 10**4
 
     # Remove temporary directory
     os.chdir(owd)
@@ -190,23 +190,23 @@ def get_score(smi, docking_target='1syh', verbose=False, scratch='/tmp'):
 def get_1syh_score(smi: str, verbose: bool = False): 
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
         score = get_score(smi=smi, docking_target='1syh', verbose=verbose) # '4lde', '6y2f', '1syh'
-        return -score # MINUS SIGN FOR OPTIMIZATION! 
+        return score # MINUS SIGN FOR OPTIMIZATION! 
     else: 
-        return -10**4
+        return 10**4
 
 def get_6y2f_score(smi: str, verbose: bool = False): 
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
         score = get_score(smi=smi, docking_target='6y2f', verbose=verbose) # '4lde', '6y2f', '1syh'
-        return -score # MINUS SIGN FOR OPTIMIZATION! 
+        return score # MINUS SIGN FOR OPTIMIZATION! 
     else: 
-        return -10**4
+        return 10**4
 
 def get_4lde_score(smi: str, verbose: bool = False): 
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
         score = get_score(smi=smi, docking_target='4lde', verbose=verbose) # '4lde', '6y2f', '1syh'
-        return -score # MINUS SIGN FOR OPTIMIZATION! 
+        return score # MINUS SIGN FOR OPTIMIZATION! 
     else: 
-        return -10**4
+        return 10**4
 
 if __name__ == '__main__':        
     smi = 'OC1=CC2=C(C=CC=C2)C(=C1)C1=CC(O)=CC2=C1C=CN=C2'

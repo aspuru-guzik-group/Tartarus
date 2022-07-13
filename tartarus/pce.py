@@ -123,14 +123,7 @@ def get_properties(smile, verbose=False, scratch: str='/tmp'):
     os.chdir(owd)
     tmp_dir.cleanup()
 
-    # Delete all the output files:  
-    # system('rm xtbopt.log xtbopt.xyz xtbrestart xtbtopo.mol charges out_dump test.smi test.xyz wbo .xtboptok')
-    # system('rm bondlengths coord coord.original cregen_0.tmp  cre_members crest_conformers.xyz crest.energies crest_rotamers.xyz struc.xyz .CHRG .history.xyz crest_best.xyz')
-    # system('rm -rf MRMSD gfnff_adjacency')
-
     return mol_dipole_val, homo_lumo_val, lumo_val, function_, pce_1, pce_2, sas
-
-
 
 
 def get_fingerprint(smile, nBits, ecfp_degree=2):
@@ -146,15 +139,12 @@ class SurrogateModel(object):
     def __init__(self, model_list_dir, use_ensemble=False):
         super(SurrogateModel, self).__init__()
         self.use_ensemble = use_ensemble
-        
+        self.device = torch.device('cpu')
         model_state_dicts = os.listdir(model_list_dir)
         self.model_list = []
         for model_state_dict in model_state_dicts:
-            self.model_list.append(torch.load(os.path.join(model_list_dir, model_state_dict)))
-
+            self.model_list.append(torch.load(os.path.join(model_list_dir, model_state_dict), map_location=self.device))
             # print(torch.load(os.path.join(model_list_dir, model_state_dict)))
-            torch.load(os.path.join(model_list_dir, model_state_dict))
-
             if use_ensemble is False:
                 break
 
@@ -162,7 +152,8 @@ class SurrogateModel(object):
         if type(x) == str:
             x = get_fingerprint(smile=x, nBits=2048, ecfp_degree=2)
             
-        x = torch.tensor(x).to('cuda:0', dtype=torch.float32)
+        # x = torch.tensor(x).to('cuda:0', dtype=torch.float32)
+        x = torch.tensor(x).to(self.device, dtype=torch.float32)
         predictions = []
         for model in self.model_list:
             predictions.append(model(x).detach().cpu().numpy())
@@ -189,15 +180,16 @@ def get_surrogate_properties(smiles):
         surrogate_model_dipole = SurrogateModel(f'{path}/dipole')
         surrogate_model_function = SurrogateModel(f'{path}/function')
         
-        homo_lumo = surrogate_model_homo_lumo.forward(smiles) 
-        lumo_val = surrogate_model_lumo_val.forward(smiles)
-        dipole = surrogate_model_dipole.forward(smiles)
-        function = surrogate_model_function.forward(smiles)
+        with torch.no_grad():
+            homo_lumo = surrogate_model_homo_lumo.forward(smiles) 
+            lumo_val = surrogate_model_lumo_val.forward(smiles)
+            dipole = surrogate_model_dipole.forward(smiles)
+            function = surrogate_model_function.forward(smiles)
     
-        return float(dipole), float(homo_lumo), float(-lumo_val), float(function)
+        return float(dipole), float(homo_lumo), float(lumo_val), float(function)
     
     except: 
-        return float(-10**4), float(-10**4), float(-10**4), float(-10**4)
+        return float(-10**4), float(-10**4), float(10**4), float(-10**4)
 
 if __name__ == '__main__':
     smi = 'c1ccccc1'

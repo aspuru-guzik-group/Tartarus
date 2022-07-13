@@ -15,7 +15,7 @@ print(f'PCE2: {pce_2}')
 print(f'SAS: {sas}')
 print()
 
-pce.get_surrogate_properties('c1sc(-c2[SiH2]c(cc2)-c2ccc(-c3scc4occc34)c3cscc23)c2Cccc12')
+dipole, hl_gap, lumo, obj = pce.get_surrogate_properties('c1sc(-c2[SiH2]c(cc2)-c2ccc(-c3scc4occc34)c3cscc23)c2Cccc12')
 print(f'Dipole: {dipole}')
 print(f'HOMO-LUMO Gap: {hl_gap}')
 print(f'LUMO: {lumo}')
@@ -34,7 +34,8 @@ print('******* Docking *******')
 print(f'Docking score: {score}')
 print()
 
-activation_energy, reaction_energy, sa_score = reactivity.get_properties('CC=CC(C)=CC=CC=CC1CC2CC1C13CC21C1C=CC3C1')
+activation_energy, reaction_energy, sa_score = reactivity.get_properties('CC=CC(C)=CC=CC=CC1CC2CC1C13CC21C1C=CC3C1', 
+    n_procs=1)  # set number of processes
 print('******* Reactivity *******')
 print(f'Activation energy: {activation_energy}')
 print(f'Reaction energy: {reaction_energy}')
