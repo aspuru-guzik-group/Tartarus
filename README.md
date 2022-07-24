@@ -96,7 +96,9 @@ activation_energy, reaction_energy, sa_score = reactivity.get_properties(smi)
 ```
 
 
-
+### Results
+Our results for running the corresponding benchmarks can be found here: 
+- Design of Protein Ligands: https://drive.google.com/file/d/1d_4mg1Eb7HrUJ2L7A8kFtld-TmPmOKlJ/view?usp=sharing
 
 
 
