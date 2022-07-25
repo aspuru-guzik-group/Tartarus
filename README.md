@@ -100,6 +100,7 @@ activation_energy, reaction_energy, sa_score = reactivity.get_properties(smi)
 Our results for running the corresponding benchmarks can be found here: 
 - Design of Protein Ligands: https://drive.google.com/file/d/1d_4mg1Eb7HrUJ2L7A8kFtld-TmPmOKlJ/view?usp=sharing
 - Design of Chemical Reaction Substrates: https://drive.google.com/file/d/1fCnFxSUITg4qSlOuwFolvQPUQA31Qaii/view?usp=sharing
+- Designing organic photovoltaics (photovoltaic conversion efficiency): https://drive.google.com/file/d/1w6oOBGjDC4Enh492jLQ7A3Xc1XbHXiIt/view?usp=sharing
 
 
 
