@@ -104,6 +104,7 @@ Our results for running the corresponding benchmarks can be found here:
 - Designing Organic Emitters: https://drive.google.com/file/d/1l8weYg835HDGvOoRbOcHUnvLjiyQi_Ms/view?usp=sharing
 - Designing organic photovoltaics (Explore): https://drive.google.com/file/d/1-J99iXfBx0_aG1BqEEXPh7q0kovBFD0L/view?usp=sharing
 - Designing organic photovoltaics (Surrogate, exploit): https://drive.google.com/file/d/1EV7ST9_F4DBnQpxhd6VaaJWP5r9ygr0c/view?usp=sharing
+- Designing organic photovoltaics (Exploit): https://drive.google.com/file/d/1Yh_8E3jRf6X230CvlRlPtk2qPQIkC5hB/view?usp=sharing
 
 
 
