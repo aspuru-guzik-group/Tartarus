@@ -1,4 +1,4 @@
-# Tartarus: The Next Generation of Benchmarks for Inverse Molecular Design
+# Tartarus: Practical and Realistic Benchmarks for Inverse Molecular Design
 
 ## Installing XTB and CREST
 
