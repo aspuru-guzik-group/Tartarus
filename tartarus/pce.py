@@ -21,6 +21,23 @@ def gaussian(x, A, B):
     return A * np.exp(-x** 2 / B)
 
 def get_properties(smile, verbose=False, scratch: str='/tmp'): 
+    '''
+    Return fitness functions for the design of OPV molecules.
+
+    Args:
+        smile: `str` representing molecule
+        verbose: `bool` turn on print statements for debugging
+        scratch: `str` temporary directory
+
+    Returns:
+        dipm: `float` dipole moment
+        gap: `float` homo lumo gap
+        lumo: `float` lumo energy
+        combined: `float` combined objective (HL_gap - LUMO + dipole moment)
+        pce_pcbm_sas: `float` PCE PCBM minus SAS
+        pce_pcdtbt_sas: `float` PCE PCDTBT minus SAS
+    '''
+
     # Create and switch to temporary directory
     owd = Path.cwd()
     scratch_path = Path(scratch)
@@ -83,7 +100,7 @@ def get_properties(smile, verbose=False, scratch: str='/tmp'):
         HL_range_rest = 0.1144 + homo_lumo_val
     else: 
         HL_range_rest = 4.2627 - HL_range_rest
-    function_ = mol_dipole_val + HL_range_rest - lumo_val # Maximize this function
+    combined = mol_dipole_val + HL_range_rest - lumo_val # Maximize this function
     
     # Compute calibrated homo and lumo levels
     homo_cal = homo_val * 0.8051030400316004 + 2.5376777453204133
@@ -123,7 +140,14 @@ def get_properties(smile, verbose=False, scratch: str='/tmp'):
     os.chdir(owd)
     tmp_dir.cleanup()
 
-    return mol_dipole_val, homo_lumo_val, lumo_val, function_, pce_1, pce_2, sas
+    # assign values
+    dipm = mol_dipole_val
+    gap = homo_lumo_val
+    lumo = lumo_val
+    pce_pcbm_sas = pce_1 - sas
+    pce_pcdtbt_sas = pce_2 - sas
+
+    return dipm, gap, lumo, combined, pce_pcbm_sas, pce_pcdtbt_sas
 
 
 def get_fingerprint(smile, nBits, ecfp_degree=2):
@@ -170,9 +194,20 @@ class SurrogateModel(object):
 
         
 def get_surrogate_properties(smiles):
-    ''' Load surrogate models trained on dataset. Make predictions of material
+    ''' Return surrogate fitness functions for the design of OPV molecules.
+    Load surrogate models trained on dataset and make predictions of material
     properties. 
+
+    Args:
+        smile: `str` representing molecule
+
+    Returns:
+        dipm: `float` dipole moment
+        gap: `float` homo lumo gap
+        lumo: `float` lumo energy
+        combined: `float` combined objective (HL_gap - LUMO + dipole moment)
     '''
+
     path = os.path.join(os.path.dirname(inspect.getfile(get_fingerprint)), 'pce_pretrained_models')
     try: 
         surrogate_model_homo_lumo = SurrogateModel(f'{path}/homo_lumo')
@@ -181,32 +216,32 @@ def get_surrogate_properties(smiles):
         surrogate_model_function = SurrogateModel(f'{path}/function')
         
         with torch.no_grad():
-            homo_lumo = surrogate_model_homo_lumo.forward(smiles) 
-            lumo_val = surrogate_model_lumo_val.forward(smiles)
-            dipole = surrogate_model_dipole.forward(smiles)
-            function = surrogate_model_function.forward(smiles)
+            gap = surrogate_model_homo_lumo.forward(smiles) 
+            lumo = surrogate_model_lumo_val.forward(smiles)
+            dipm = surrogate_model_dipole.forward(smiles)
+            combined = surrogate_model_function.forward(smiles)
     
-        return float(dipole), float(homo_lumo), float(lumo_val), float(function)
+        return float(dipm), float(gap), float(lumo), float(combined)
     
     except: 
         return float(-10**4), float(-10**4), float(10**4), float(-10**4)
 
 if __name__ == '__main__':
+    # calculate fitness values
     smi = 'c1ccccc1'
-    dipole, hl_gap, lumo, obj, pce_1, pce_2, sas = get_properties(smi)
-    print(f'Dipole: {dipole}')
-    print(f'HOMO-LUMO Gap: {hl_gap}')
+    dipm, gap, lumo, combined, pce_pcbm_sas, pce_pcdtbt_sas = get_properties(smi)
+    print(f'Dipole moment: {dipm}')
+    print(f'HOMO-LUMO Gap: {gap}')
     print(f'LUMO: {lumo}')
-    print(f'Combined obj: {obj}')
-    print(f'PCE1: {pce_1}')
-    print(f'PCE2: {pce_2}')
-    print(f'SAS: {sas}')
+    print(f'Combined obj: {combined}')
+    print(f'PCE_PCBM - SAS: {pce_pcbm_sas}')
+    print(f'PCE_PCDTBT - SAS: {pce_pcdtbt_sas}')
 
-    smi = 'c1ccccc1'
-    dipole, hl_gap, lumo, obj = get_surrogate_properties(smi)
-    print(f'Dipole: {dipole}')
-    print(f'HOMO-LUMO Gap: {hl_gap}')
+    # calculating using surrogate model
+    dipm, gap, lumo, combined = get_surrogate_properties(smi)
+    print(f'Dipole moment: {dipm}')
+    print(f'HOMO-LUMO Gap: {gap}')
     print(f'LUMO: {lumo}')
-    print(f'Combined obj: {obj}')
+    print(f'Combined obj: {combined}')
 
 
