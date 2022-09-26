@@ -107,6 +107,14 @@ Our results for running the corresponding benchmarks can be found here:
 - Designing organic photovoltaics (Exploit): https://drive.google.com/file/d/1Yh_8E3jRf6X230CvlRlPtk2qPQIkC5hB/view?usp=sharing
 
 
+## Questions, problems?
+Make a github issue 😄. Please be as clear and descriptive as possible. Please feel free to reach
+out in person: (akshat98[AT]stanford[DOT]edu, robert[DOT]pollice[AT]gmail[DOT]com
+
+## License
+
+[Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
+
 
 
 
