@@ -1,4 +1,4 @@
-# Tartarus: Practical and Realistic Benchmarks for Inverse Molecular Design
+# Tartarus: A Benchmarking Platform for Realistic And Practical Inverse Molecular Design
 
 ## Installing XTB and CREST
 
