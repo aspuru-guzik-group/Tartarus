@@ -1,4 +1,4 @@
-# Tartarus: A Benchmarking Platform for Realistic And Practical Inverse Molecular Design
+# Tartarus: Practical and Realistic Benchmarks for Inverse Molecular Design
 
 ## Installing XTB and CREST
 
@@ -14,21 +14,48 @@ export MANPATH=${MANPATH}:${XTBHOME}/share/man
 
 ## Installing SMINA
 
-The task of designing molecules that dock to proteins requires the use of [**SMINA**](https://sourceforge.net/projects/smina/), a method for calcualte docking scores of ligands onto solved structures (proteins).
+The task of designing molecules that dock to proteins requires the use of [**SMINA**](https://sourceforge.net/projects/smina/), a method for calcualte docking scores of ligands onto solved structures (proteins). The binary file is already included in the repository, in `tartarus/docking_structures/smina.static`.
+
+
+## Packages required
+Use `python >= 3.8`. We recommend using a conda environment for the installation of 
+- rdkit >= 2021.03.3
+- xtb-python >= 20.1
+- openbabel == 3.1.1
+<!-- - xtb == 6.4.1
+- xorg-libxrender == 0.9.10 -->
+
+Required packages:
+- numpy >= 1.22.3
+- pandas >= 1.4.3 
+- torch == 1.12.0
+- pyscf == 2.0.1
+- morfeus-ml >= 0.7.1
+- geometric == 0.9.7.2
+- pyberny == 0.6.3
+- loguru == 0.6.0
+- geodesic-interpolate == 1.0.0 \
+(`pip install -i https://test.pypi.org/simple/ geodesic-interpolate`)
+- polyani == 0.0.1 \
+(`pip install git+https://github.com/kjelljorner/polanyi`)
+<!-- - selfies == 1.0.3
+- scikit-learn >= 1.1.1 
+- h5py == 3.7.0
+- wurlitzer == 3.0.2
+- sqlalchemy >= 1.4.13 -->
 
 
 ## Datasets 
 
-All datasets are found in the [datasets](datasets/) directory. 
+All datasets are found in the [datasets](datasets/) directory. The arrows indicate the goal (&#8593; = maximization, &#8595; = minimization). 
 
-|Task | Dataset name       | Number of smiles |  Columns in file |||||
-|---|--------------------|------------------|----|----|----|--|---|
-| Designing OPV | `hce.csv`          | 24,953           | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;) | Dipole (&#8593;) | Combined objective (&#8593;) |
-| Designing OPV | `unbiased_hce.csv` | 1,000            | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;) | Dipole (&#8593;) | Combined objective (&#8593;) |
-| Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) | Time (s) |
-| Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8593;) | 4LDE (&#8593;) | Time (s) | |
-| Designing drugs | `reactivity.csv`      | 60,828          | |  | |  | |
-
+|Task | Dataset name       | # of smiles |  Columns in file |||||||
+|---|--------------------|------------------|----|----|----|---|----|----|----|
+| Designing OPV | `hce.csv`          | 24,953         | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)  |  Combined objective (&#8593;) | PCE<sub>PCBM</sub> -SAS (&#8593;) | PCE<sub>PCDTBT</sub> -SAS (&#8593;) | 
+| Designing OPV | `unbiased_hce.csv` | 1,000          | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)   | Combined objective (&#8593;) |
+| Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) |  |
+| Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8595;) | 4LDE (&#8595;) |  | |
+| Designing chemical reaction substrates | `reactivity.csv`      | 60,828          | 	Activation energy &Delta;E<sup>&#8225;</sup> (&#8595;)   |  	Reaction energy &Delta;E<sub>r</sub> (&#8595;)  | &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)  |  - &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)    |     |
 
 ## Getting started 
 
@@ -45,18 +72,20 @@ smi = smiles[0]
 
 ## use full xtb calculation in hce module
 from tartarus import pce
-dipole, hl_gap, lumo, combined, pce_1, pce_2, sas = pce.get_properties(smi)
+dipm, gap, lumo, combined, pce_pcbm_sas, pce_pcdtbt_sas = pce.get_properties(smi)
 
 ## use pretrained surrogate model
-dipole, hl_gap, lumo, combined = pce.get_surrogate_properties(smi)
+dipm, gap, lumo, combined = pce.get_surrogate_properties(smi)
 ```
 
 
 ### Designing Organic Emitters
+Load the objective functions from the `tadf` module.
+
 
 ```python
 import pandas as pd
-data = pd.read_csv('./datasets/gdb13.csv')   # or ./dataset/unbiased_hce.csv
+data = pd.read_csv('./datasets/gdb13.csv')  
 smiles = data['smiles'].tolist()
 smi = smiles[0]
 
@@ -67,32 +96,34 @@ st, osc, combined = tadf.get_properties(smi)
 
 
 ### Design of drug molecule
+Load the `docking` module. There are separate functions for each of the proteins, as shown below.
 
 ```python
 import pandas as pd
-data = pd.read_csv('./datasets/docking.csv')   # or ./dataset/unbiased_hce.csv
+data = pd.read_csv('./datasets/docking.csv')  
 smiles = data['smiles'].tolist()
 smi = smiles[0]
 
 ## Design of Protein Ligands 
 from tartarus import docking
-st, osc, combined = docking.get_1syh_score(smi)
-st, osc, combined = docking.get_6y2f_score(smi)
-st, osc, combined = docking.get_4lde_score(smi)
+score_1syh = docking.get_1syh_score(smi)
+score_6y2f = docking.get_6y2f_score(smi)
+score_4lde = docking.get_4lde_score(smi)
 ```
 
 
 ### Design of Chemical Reaction Substrates
+Load the `reactivity` module. All 4 fitness functions are returned for each smiles.
 
 ```python
 import pandas as pd
-data = pd.read_csv('./datasets/reactivity.csv')   # or ./dataset/unbiased_hce.csv
+data = pd.read_csv('./datasets/reactivity.csv')  
 smiles = data['smiles'].tolist()
 smi = smiles[0]
 
 ## calculating binding affinity for each protein
 from tartarus import reactivity
-activation_energy, reaction_energy, sa_score = reactivity.get_properties(smi)
+Ea, Er, sum_Ea_Er, diff_Ea_Er = reactivity.get_properties(smi)
 ```
 
 
