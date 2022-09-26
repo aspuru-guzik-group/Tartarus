@@ -409,23 +409,44 @@ def substructure_violations(mol):
 
     
 def get_properties(smi: str, verbose: bool = False, n_procs: int = 1): 
+    '''
+    Return fitness functions for the design of OPV molecules.
+
+    Args:
+        smile: `str` representing molecule
+        verbose: `bool` turn on print statements for debugging
+        n_procs: `int` number of processes
+
+    Returns:
+        Ea: `float` activation energy with group constraints
+        Er: `float` reaction energy with group constraints
+        sum_Ea_Er: `float` activation + reaction with group and SAS constraints
+        diff_Ea_Er: `float` reaction - activation with group and SAS constraints
+    '''
 
     # Check if substructure is present & there are no fragment violations: 
     mol = Chem.MolFromSmiles(smi)
     call_ = substructure_preserver(mol) # False = =Bad!
     substr_vio = substructure_violations(mol) # True == Bad!
     if substr_vio == True or call_ == False: 
-        return -10**4, -10**4, 10**4
+        # return -10**4, -10**4, 10**4
+        return 10**4, 10**4, 10**4, 10**4
     
     # Normal calculation can procedd (no fitness violations): 
     smiles_stereo, activation_energy, reaction_energy, sa_score, run_time = run_reaction(smi, n_procs=n_procs)
 
-    return activation_energy, reaction_energy, sa_score
-    # print('Output is: ', out)
+    # assign values
+    Ea = activation_energy
+    Er = reaction_energy
+    sum_Ea_Er = activation_energy + reaction_energy if sa_score <= 6.0 else 10**4
+    diff_Ea_Er = -activation_energy + reaction_energy if sa_score <= 6.0 else 10**4
+
+    return Ea, Er, sum_Ea_Er, diff_Ea_Er
 
 if __name__ == '__main__':        
     smi = 'OC1=CC2=C(C=CC=C2)C(=C1)C1=CC(O)=CC2=C1C=CN=C2'
-    activation_energy, reaction_energy, sa_score = get_properties(smi)
-    print(f'Activation energy: {activation_energy}')
-    print(f'Reaction energy: {reaction_energy}')
-    print(f'SAS: {sa_score}')
+    Ea, Er, sum_Ea_Er, diff_Ea_Er = get_properties(smi)
+    print(f'Activation energy: {Ea}')
+    print(f'Reaction energy: {Er}')
+    print(f'Activation + Reaction: {sum_Ea_Er}')
+    print(f'- Activation + Reaction: {diff_Ea_Er}')
