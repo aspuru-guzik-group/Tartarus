@@ -49,13 +49,13 @@ Required packages:
 
 All datasets are found in the [datasets](datasets/) directory. The arrows indicate the goal (&#8593; = maximization, &#8595; = minimization). 
 
-|Task | Dataset name       | # of smiles |  Columns in file |||||||
-|---|--------------------|------------------|----|----|----|---|----|----|----|
+|Task | Dataset name       | # of smiles |  Columns in file ||||||
+|---|--------------------|------------------|----|----|----|---|----|----|
 | Designing OPV | `hce.csv`          | 24,953         | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)  |  Combined objective (&#8593;) | PCE<sub>PCBM</sub> -SAS (&#8593;) | PCE<sub>PCDTBT</sub> -SAS (&#8593;) | 
-| Designing OPV | `unbiased_hce.csv` | 1,000          | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)   | Combined objective (&#8593;) |
-| Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) |  |
-| Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8595;) | 4LDE (&#8595;) |  | |
-| Designing chemical reaction substrates | `reactivity.csv`      | 60,828          | 	Activation energy &Delta;E<sup>&#8225;</sup> (&#8595;)   |  	Reaction energy &Delta;E<sub>r</sub> (&#8595;)  | &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)  |  - &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)    |     |
+| Designing OPV | `unbiased_hce.csv` | 1,000          | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)   | Combined objective (&#8593;) | ||
+| Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) |  | ||
+| Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8595;) | 4LDE (&#8595;) |  | | |
+| Designing chemical reaction substrates | `reactivity.csv`      | 60,828          | 	Activation energy &Delta;E<sup>&#8225;</sup> (&#8595;)   |  	Reaction energy &Delta;E<sub>r</sub> (&#8595;)  | &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)  |  - &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)    |     | |
 
 ## Getting started 
 
@@ -80,8 +80,7 @@ dipm, gap, lumo, combined = pce.get_surrogate_properties(smi)
 
 
 ### Designing Organic Emitters
-Load the objective functions from the `tadf` module.
-
+Load the objective functions from the `tadf` module. All 3 fitness functions are returned for each smiles.
 
 ```python
 import pandas as pd
