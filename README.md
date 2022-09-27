@@ -1,5 +1,8 @@
 # Tartarus: Practical and Realistic Benchmarks for Inverse Molecular Design
 
+This repository contains the code and results for the paper [Tartarus, an open-source collection of benchmarks for evaluation of a generative model](https://arxiv.org/abs/2209.12487)
+
+
 ## Installing XTB and CREST
 
 The task of designing organic photovoltaics and emitters will require the use of [**XTB**](https://github.com/grimme-lab/xtb), a program package of semi-empirical quantum mechanical methods, and [**CREST**](https://github.com/grimme-lab/crest), a utility of xtb used to sample molecular conformers. 
