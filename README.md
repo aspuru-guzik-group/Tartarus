@@ -142,7 +142,7 @@ Our results for running the corresponding benchmarks can be found here:
 
 ## Questions, problems?
 Make a github issue 😄. Please be as clear and descriptive as possible. Please feel free to reach
-out in person: (akshat98[AT]stanford[DOT]edu, robert[DOT]pollice[AT]gmail[DOT]com
+out in person: (akshat98[AT]stanford[DOT]edu, robert[DOT]pollice[AT]gmail[DOT]com)
 
 ## License
 
