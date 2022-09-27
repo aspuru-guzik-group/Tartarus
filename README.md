@@ -1,6 +1,6 @@
 # Tartarus: Practical and Realistic Benchmarks for Inverse Molecular Design
 
-This repository contains the code and results for the paper [Tartarus, an open-source collection of benchmarks for evaluation of a generative model](https://arxiv.org/abs/2209.12487)
+This repository contains the code and results for the paper [Tartarus, an open-source collection of benchmarks for evaluation of a generative model](https://arxiv.org/abs/2209.12487).
 
 
 ## Installing XTB and CREST
