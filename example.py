@@ -2,7 +2,6 @@ from tartarus import pce
 from tartarus import tadf
 from tartarus import docking
 from tartarus import reactivity
-import pdb; pdb.set_trace()
 
 # test and print all objecties
 dipm, gap, lumo, combined, pce_pcbm_sas, pce_pcdtbt_sas = pce.get_properties('c1sc(-c2[SiH2]c(cc2)-c2ccc(-c3scc4occc34)c3cscc23)c2Cccc12')

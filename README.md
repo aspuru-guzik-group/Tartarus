@@ -39,7 +39,7 @@ Required packages:
 - loguru == 0.6.0
 - geodesic-interpolate == 1.0.0 \
 (`pip install -i https://test.pypi.org/simple/ geodesic-interpolate`)
-- polyani == 0.0.1 \
+- polanyi == 0.0.1 \
 (`pip install git+https://github.com/kjelljorner/polanyi`)
 <!-- - selfies == 1.0.3
 - scikit-learn >= 1.1.1 
@@ -62,6 +62,7 @@ All datasets are found in the [datasets](datasets/) directory. The arrows indica
 
 ## Getting started 
 
+Below are some examples of how to load the datasets and use the fitness functions. For more details, you can also look at `example.py`. 
 
 ### Designing organic photovoltaics
 
