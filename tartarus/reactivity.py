@@ -339,11 +339,12 @@ def run_reaction(
     try: 
         activation_energy, reaction_energy, smiles_stereo = barrier_from_smiles(smiles)
     except Exception:
+        print('Reactivity simulation has failed for this molecule.')
         failed = True
         smiles_stereo = None
-        activation_energy = None
-        reaction_energy = None
-        sa_score = None
+        activation_energy = 10**4
+        reaction_energy = 10**4
+        sa_score = 10**4
 
     # Calculate run time
     end_time = time.time()
@@ -367,9 +368,9 @@ def run_reaction(
         dist = cov.mahalanobis(np.array([reaction_energy, activation_energy]).reshape(1, -1))
         if dist > 500:
             smiles_stereo = None
-            activation_energy = None
-            reaction_energy = None
-            sa_score = None
+            activation_energy = 10**4 # None
+            reaction_energy = 10**4 # None
+            sa_score = 10**4 # None
 
     return smiles_stereo, activation_energy, reaction_energy, sa_score, run_time
 
