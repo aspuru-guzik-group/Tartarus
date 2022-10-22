@@ -2,6 +2,7 @@
 
 This repository contains the code and results for the paper [Tartarus, an open-source collection of benchmarks for evaluation of a generative model](https://arxiv.org/abs/2209.12487).
 
+Total installation time: ~15-20mins. 
 
 ## Installing XTB and CREST
 
