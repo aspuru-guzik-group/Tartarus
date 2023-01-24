@@ -4,6 +4,20 @@ This repository contains the code and results for the paper [Tartarus, an open-s
 
 Total installation time: ~15-20mins. 
 
+## Benchmarking with Tartarus
+
+To run the Tartarus benchmark we recommend using the provided Docker container. You will need to have Docker installed on your machine. Once you have Docker, you can follow these steps:
+
+1. Pull the Tartarus Docker image: `docker pull ac/tartarus:latest`
+
+2. Run the Docker container: `docker run --rm -it -v ${PATH_TO_DATA}:/data ac/tartarus:latest --mode ${BENCHMARK_MODE} --smiles_file ${INPUT_FILE_NAME}`
+
+3. The output file will be written to the mounted data container.
+
+Please note that this is a high level summary, for more details and all possible options please refer to the documentation provided with the container or the Tartarus Github repository.
+
+
+
 ## Installing XTB and CREST
 
 The task of designing organic photovoltaics and emitters will require the use of [**XTB**](https://github.com/grimme-lab/xtb), a program package of semi-empirical quantum mechanical methods, and [**CREST**](https://github.com/grimme-lab/crest), a utility of xtb used to sample molecular conformers. 
@@ -21,7 +35,7 @@ export MANPATH=${MANPATH}:${XTBHOME}/share/man
 The task of designing molecules that dock to proteins requires the use of [**SMINA**](https://sourceforge.net/projects/smina/), a method for calcualte docking scores of ligands onto solved structures (proteins). The binary file is already included in the repository, in `tartarus/docking_structures/smina.static`.
 
 
-## Packages required
+<!-- ## Packages required
 Use `python >= 3.8`. We recommend using a conda environment for the installation of 
 - rdkit >= 2021.03.3
 - xtb-python >= 20.1
@@ -46,7 +60,7 @@ Required packages:
 - scikit-learn >= 1.1.1 
 - h5py == 3.7.0
 - wurlitzer == 3.0.2
-- sqlalchemy >= 1.4.13 -->
+- sqlalchemy >= 1.4.13 --> -->
 
 
 ## Datasets 

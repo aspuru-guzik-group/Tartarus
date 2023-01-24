@@ -1,0 +1,26 @@
+name: tartarus-env-test
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - pytorch
+  - rdkit
+  - openbabel
+  - xtb-python
+  - crest
+  - setuptools
+  - pip:
+    - numpy
+    - pyscf
+    - morfeus-ml
+    - h5py
+    - scikit-learn
+    - geometric
+    - pyberny
+    - loguru
+    - wurlitzer
+    - sqlalchemy
+    - git+https://github.com/kjelljorner/polanyi
+    - --extra-index-url https://test.pypi.org/simple/ geodesic-interpolate 
+    
