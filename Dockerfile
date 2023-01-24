@@ -24,12 +24,13 @@ RUN pip install h5py scikit-learn geometric pyberny loguru wurlitzer sqlalchemy
 RUN pip install -i https://test.pypi.org/simple/ geodesic-interpolate
 RUN pip install git+https://github.com/kjelljorner/polanyi
 
-COPY . .
-
 RUN mkdir /data
+WORKDIR /benchmark
 
 RUN echo "export XTBHOME=$CONDA_PREFIX" > $CONDA_PREFIX/etc/conda/activate.d/env.sh
 RUN echo "source $CONDA_PREFIX/share/xtb/config_env.bash" >> $CONDA_PREFIX/etc/conda/activate.d/env.sh
+
+COPY . .
 
 SHELL ["conda", "run", "-n", "tartarus", "/bin/bash", "-c"]
 ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "tartarus", "python", "benchmark.py"]
