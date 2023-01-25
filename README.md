@@ -42,9 +42,11 @@ To install Tartarus locally, we recommend using the provided Conda environment d
     conda env create -f environment.yml
 ```
 
+3. Activate the tartarus Conda environment.
 
-
-
+```bash
+    conda activate tartarus
+```
 
 ## Datasets 
 

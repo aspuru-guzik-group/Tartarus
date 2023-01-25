@@ -24,18 +24,17 @@ def get_properties(smile, verbose=False, scratch: str='/tmp'):
     '''
     Return fitness functions for the design of OPV molecules.
 
-    Args:
-        smile: `str` representing molecule
-        verbose: `bool` turn on print statements for debugging
-        scratch: `str` temporary directory
+    :param smile: `str` representing molecule
+    :param verbose: `bool` turn on print statements for debugging
+    :param scratch: `str` temporary directory
 
-    Returns:
-        dipm: `float` dipole moment
-        gap: `float` homo lumo gap
-        lumo: `float` lumo energy
-        combined: `float` combined objective (HL_gap - LUMO + dipole moment)
-        pce_pcbm_sas: `float` PCE PCBM minus SAS
-        pce_pcdtbt_sas: `float` PCE PCDTBT minus SAS
+    :returns: 
+        - dipm - `float` dipole moment
+        - gap - `float` homo lumo gap
+        - lumo - `float` lumo energy
+        - combined - `float` combined objective (HL_gap - LUMO + dipole moment)
+        - pce_pcbm_sas - `float` PCE PCBM minus SAS
+        - pce_pcdtbt_sas - `float` PCE PCDTBT minus SAS
     '''
 
     # Create and switch to temporary directory
@@ -161,6 +160,12 @@ def get_fingerprint(smile, nBits, ecfp_degree=2):
 
 class SurrogateModel(object):
     def __init__(self, model_list_dir, use_ensemble=False):
+        """Initialize the model.
+        
+        :param model_list_dir: directory of the model list
+        :param use_ensemble: Enable ensemble model
+        """
+
         super(SurrogateModel, self).__init__()
         self.use_ensemble = use_ensemble
         self.device = torch.device('cpu')
@@ -198,14 +203,13 @@ def get_surrogate_properties(smiles):
     Load surrogate models trained on dataset and make predictions of material
     properties. 
 
-    Args:
-        smile: `str` representing molecule
-
-    Returns:
-        dipm: `float` dipole moment
-        gap: `float` homo lumo gap
-        lumo: `float` lumo energy
-        combined: `float` combined objective (HL_gap - LUMO + dipole moment)
+    :param smiles: SMILES string of molecule
+    
+    :returns:
+        - dipm - `float` dipole moment
+        - gap - `float` homo lumo gap
+        - lumo - `float` lumo energy
+        - combined - `float` combined objective (HL_gap - LUMO + dipole moment)
     '''
 
     path = os.path.join(os.path.dirname(inspect.getfile(get_fingerprint)), 'pce_pretrained_models')

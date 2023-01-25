@@ -188,6 +188,13 @@ def get_score(smi, docking_target='1syh', verbose=False, scratch='/tmp'):
 
 
 def get_1syh_score(smi: str, verbose: bool = False): 
+    """Get the 1syh score for a given SMILES string
+    
+    :param smi: `str` SMILES string
+    :param verbose: `str` Print out the command line output
+    :return: `float` 1syh score
+    """
+
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
         score = get_score(smi=smi, docking_target='1syh', verbose=verbose) # '4lde', '6y2f', '1syh'
         return score # MINUS SIGN FOR OPTIMIZATION! 
@@ -195,6 +202,13 @@ def get_1syh_score(smi: str, verbose: bool = False):
         return 10**4
 
 def get_6y2f_score(smi: str, verbose: bool = False): 
+    """Get the 6y2f score for a given SMILES string
+
+    :param smi: `str` SMILES string
+    :param verbose: `str` Print out the command line output
+
+    :return: `float` 6y2f score
+    """
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
         score = get_score(smi=smi, docking_target='6y2f', verbose=verbose) # '4lde', '6y2f', '1syh'
         return score # MINUS SIGN FOR OPTIMIZATION! 
@@ -202,6 +216,12 @@ def get_6y2f_score(smi: str, verbose: bool = False):
         return 10**4
 
 def get_4lde_score(smi: str, verbose: bool = False): 
+    """Get the 4lde score for a given SMILES string
+    
+    :param smi: `str` SMILES string
+    :param verbose: `str` Print out the command line output
+    :return: 4lde score
+    """
     if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
         score = get_score(smi=smi, docking_target='4lde', verbose=verbose) # '4lde', '6y2f', '1syh'
         return score # MINUS SIGN FOR OPTIMIZATION! 

@@ -410,19 +410,17 @@ def substructure_violations(mol):
 
     
 def get_properties(smi: str, verbose: bool = False, n_procs: int = 1): 
-    '''
-    Return fitness functions for the design of OPV molecules.
+    '''Return fitness functions for the design of OPV molecules.
 
-    Args:
-        smile: `str` representing molecule
-        verbose: `bool` turn on print statements for debugging
-        n_procs: `int` number of processes
+    :param smi: `str` representing molecule
+    :param verbose: `bool` turn on print statements for debugging
+    :param n_procs: `int` number of processes
 
-    Returns:
-        Ea: `float` activation energy with group constraints
-        Er: `float` reaction energy with group constraints
-        sum_Ea_Er: `float` activation + reaction with group and SAS constraints
-        diff_Ea_Er: `float` reaction - activation with group and SAS constraints
+    :returns:
+        - Ea - `float` activation energy with group constraints
+        - Er - `float` reaction energy with group constraints
+        - sum_Ea_Er - `float` activation + reaction with group and SAS constraints
+        - diff_Ea_Er - `float` reaction - activation with group and SAS constraints
     '''
 
     # Check if substructure is present & there are no fragment violations: 

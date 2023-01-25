@@ -277,6 +277,19 @@ class computation:
     
 
 def get_properties(smi: str, verbose: bool=False, scratch='/tmp'): 
+    """
+    Get fluorescence properties from SMILES string.
+    
+    :param smi: `str` SMILES string
+    :param verbose: `bool` Print output to screen
+    :param scratch: `str` Scratch directory
+
+    :returns: 
+        - st: `float` Singlet-triplet gap
+        - osc: `float` Oscillator strength 
+        - combined: `float` Combined fluorescence energy
+    """
+
     # Create and switch to temporary directory
     owd = Path.cwd()
     scratch_path = Path(scratch)
