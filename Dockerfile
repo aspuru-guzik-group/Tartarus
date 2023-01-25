@@ -33,4 +33,4 @@ RUN echo "source $CONDA_PREFIX/share/xtb/config_env.bash" >> $CONDA_PREFIX/etc/c
 COPY . .
 
 SHELL ["conda", "run", "-n", "tartarus", "/bin/bash", "-c"]
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "tartarus", "python", "benchmark.py"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "tartarus", "python", "/benchmark/benchmark.py"]
