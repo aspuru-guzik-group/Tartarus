@@ -1,15 +1,16 @@
-name: tartarus-env-test
+name: tartarus
 channels:
   - pytorch
   - conda-forge
   - defaults
 dependencies:
+  - python=3.8
   - pytorch
   - rdkit
-  - openbabel
+  - openbabel=3.1.1
   - xtb=6.3.3
-  - xtb-python
-  - crest
+  - xtb-python=20.2
+  - crest=2.12
   - setuptools
   - pip:
     - numpy

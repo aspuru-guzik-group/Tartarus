@@ -65,4 +65,12 @@ To install Tartarus locally, you will need to have Conda installed on your machi
 Common Issues
 *************
 
+Depending on the version of Conda that you have installed, it is possible that the geodesic-interpolate package may not install correctly 
+from the PyPI test registery. If this is the case, you can install the package manually by running:
 
+.. code-block:: console
+
+    $ pip install --extra-index-url https://test.pypi.org/simple/ geodesic-interpolate
+
+Benchmarking Quick Start
+------------------------
