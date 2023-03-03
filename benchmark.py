@@ -67,7 +67,6 @@ def benchmark_smile(smile, mode, verbose):
             smile (str): SMILE string
             mode (str): Benchmark mode (pce, tadf, docking, reactivity)
     """
-    print("Benchmarking: ", smile, " in mode: ", mode, "")
     if mode == 'pce':
         result = PCEResult(smile, *pce.get_properties(smile, verbose=verbose))
     elif mode == 'tadf':

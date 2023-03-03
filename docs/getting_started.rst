@@ -23,7 +23,7 @@ To use the Docker image, you will need to have Docker installed on your machine.
 
 .. code-block:: console
 
-    $ docker run -v /local/path/to/data:/data aspuru/tartarus:latest --task <task_name> --input_filename <input_filename>
+    $ docker run -v /local/path/to/data:/data aspuru/tartarus:latest --mode <mode_name> --input_filename <input_filename>
 
 Local Installation
 ******************
@@ -79,11 +79,11 @@ The quickest way to get started with Tartarus is to use the provided Docker imag
 
 .. code-block:: console
 
-    $ docker run -v /local/path/to/data:/data aspuru/tartarus:latest --task <task_name> --input_filename <input_filename>
+    $ docker run -v /local/path/to/data:/data aspuru/tartarus:latest --mode <mode_name> --input_filename <input_filename>
 
 The Docker ``-v`` flag mounts the local directory ``/local/path/to/data`` to the Docker container's ``/data`` directory. This allows Tartarus to access the data inside the container. The benchmarking script exposes the following configuration flags:
 
-* ``--task``: The name of the benchmarking task to run. The available tasks are ``pce``, ``tadf``, ``docking``, ``reactivity``.
+* ``--mode``: The name of the benchmarking mode to run. The available modes are ``pce``, ``tadf``, ``docking``, ``reactivity``.
 * ``--input_filename``: The name of the input file to use for the benchmarking task. The input file should be located in the mounted directory.
 * ``--output_filename``: The name of the output file to write the benchmarking results to. The output file will be written to the mounted directory. If this flag is not provided, the results will be written to ``output.csv``.
 * ``--parallel``: Configures Tartarus to use parallel processes for the benchmarking task. If this flag is provided, Tartarus will use all available cores. If this flag is not provided, Tartarus will use a single core.
