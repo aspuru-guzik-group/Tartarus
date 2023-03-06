@@ -16,7 +16,7 @@ Features
 --------
 * **Benchmark suite for inverse molecular design.** Tartarus provides a set of practical tasks mimicking real-life molecular design problems for materials, drugs, and chemical reactions. The tasks are designed to be challenging, but also to be solvable by state-of-the-art inverse molecular design algorithms. The tasks are designed to be challenging, but also to be solvable by state-of-the-art inverse molecular design algorithms.
 * **Baseline Implementations** Implementations of several popular molecular design algorithms on Tartarus benchmark objectives to provide examples of how to conduct a performance comparison.
-* **Lightweight Installation** Tartarus is can be pulled and run directly via 
+* **Lightweight Installation** Tartarus provides a pre-built Docker image that can be pulled and run with a single command. This makes it easy to get started with Tartarus, and to run the benchmark suite on any machine with Docker installed. 
 
 We that the Tartarus benchmark suite will help move the field towards more realistic molecular design benchmarks, and move the development 
 of inverse molecular design algorithms closer to the practice of designing molecules that solve existing problems in both academia and industry alike.
