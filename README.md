@@ -1,8 +1,9 @@
+[![Documentation Status](https://readthedocs.org/projects/tartarus/badge/?version=latest)](https://tartarus.readthedocs.io/en/latest/?badge=latest)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 # Tartarus: Practical and Realistic Benchmarks for Inverse Molecular Design
 
 This repository contains the code and results for the paper [Tartarus, an open-source collection of benchmarks for evaluation of a generative model](https://arxiv.org/abs/2209.12487).
-
-Total installation time: ~15-20mins. 
 
 ## Benchmarking with Tartarus
 
@@ -21,10 +22,11 @@ To run the Tartarus benchmark we recommend using the provided Docker container. 
 3. Run the Docker container with the directory of your data mounted, the benchmark mode and the CSV input filename: 
 
 ```bash
-    docker run --rm -it -v ${PATH_TO_DATA}:/data ac/tartarus:latest --mode ${BENCHMARK_MODE} --input_filename ${INPUT_FILENAME}
+    docker run --rm -it -v ${LOCAL_PATH_TO_DATA}:/data ac/tartarus:latest --mode ${BENCHMARK_MODE} --input_filename ${INPUT_FILENAME}
 ```
 
-4. The output file will be written to the same directory with the the default filename `${INPUT_FILENAME}_output.csv`. 
+4. The output file will be written to the same directory by default with the filename `output.csv`. 
+
 
 ### Installing from Source
 
@@ -48,7 +50,15 @@ To install Tartarus locally, we recommend using the provided Conda environment d
     conda activate tartarus
 ```
 
-## Datasets 
+## Documentation
+
+Detailed documentation can be found here: [Tartarus Docs](https://tartarus.readthedocs.io/en/latest/)
+
+## Getting started 
+
+Below are some examples of how to load the datasets and use the fitness functions. For more details, you can also look at `example.py`. 
+
+### Datasets 
 
 All datasets are found in the [datasets](datasets/) directory. The arrows indicate the goal (&#8593; = maximization, &#8595; = minimization). 
 
@@ -59,10 +69,6 @@ All datasets are found in the [datasets](datasets/) directory. The arrows indica
 | Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) |  | ||
 | Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8595;) | 4LDE (&#8595;) |  | | |
 | Designing chemical reaction substrates | `reactivity.csv`      | 60,828          | 	Activation energy &Delta;E<sup>&#8225;</sup> (&#8595;)   |  	Reaction energy &Delta;E<sub>r</sub> (&#8595;)  | &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)  |  - &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)    |     | |
-
-## Getting started 
-
-Below are some examples of how to load the datasets and use the fitness functions. For more details, you can also look at `example.py`. 
 
 ### Designing organic photovoltaics
 
@@ -128,7 +134,6 @@ smi = smiles[0]
 from tartarus import reactivity
 Ea, Er, sum_Ea_Er, diff_Ea_Er = reactivity.get_properties(smi)
 ```
-
 
 ### Results
 Our results for running the corresponding benchmarks can be found here: 
