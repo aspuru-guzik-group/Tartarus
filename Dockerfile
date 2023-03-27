@@ -5,9 +5,9 @@ RUN apt-get update && apt-get upgrade
 SHELL ["/bin/bash", "--login", "-c"]
 
 WORKDIR /benchmark
-COPY env_test.yml .
+COPY environment.yml .
 
-RUN conda env create -f env_test.yml
+RUN conda env create -f environment.yml
 RUN conda init bash
 RUN echo "conda activate tartarus" >> ~/.bashrc
 

@@ -17,13 +17,13 @@ To use the Docker image, you will need to have Docker installed on your machine.
 
 .. code-block:: console
 
-    $ docker pull aspuru/tartarus:latest
+    $ docker pull johnwilles/tartarus:latest
 
 2. You can then run the image with:
 
 .. code-block:: console
 
-    $ docker run -v /local/path/to/data:/data aspuru/tartarus:latest --mode <mode_name> --input_filename <input_filename>
+    $ docker run -v /local/path/to/data:/data johnwilles/tartarus:latest --mode <mode_name> --input_filename <input_filename>
 
 Local Installation
 ******************
@@ -79,7 +79,7 @@ The quickest way to get started with Tartarus is to use the provided Docker imag
 
 .. code-block:: console
 
-    $ docker run -v /local/path/to/data:/data aspuru/tartarus:latest --mode <mode_name> --input_filename <input_filename>
+    $ docker run -v /local/path/to/data:/data johnwilles/tartarus:latest --mode <mode_name> --input_filename <input_filename>
 
 The Docker ``-v`` flag mounts the local directory ``/local/path/to/data`` to the Docker container's ``/data`` directory. This allows Tartarus to access the data inside the container. The benchmarking script exposes the following configuration flags:
 

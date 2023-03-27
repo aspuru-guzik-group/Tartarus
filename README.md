@@ -16,7 +16,7 @@ To run the Tartarus benchmark we recommend using the provided Docker container. 
 2. Pull the latest Tartarus Docker image: 
 
 ``` bash
-    docker pull ac/tartarus:latest
+    docker pull johnwilles/tartarus:latest
 ```
 
 3. Run the Docker container with the directory of your data mounted, the benchmark mode and the CSV input filename: 
