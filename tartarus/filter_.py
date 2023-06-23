@@ -26,13 +26,14 @@ import sascorer
 import os    
 RDLogger.DisableLog('rdApp.*')
 
+file_dir = os.path.dirname(os.path.realpath(__file__))
 
-_mcf = pd.read_csv(os.path.join('./data/mcf.csv'))
-_pains = pd.read_csv(os.path.join('./data/wehi_pains.csv'), names=['smarts', 'names'])
+_mcf = pd.read_csv(os.path.join(file_dir, 'data/mcf.csv'))
+_pains = pd.read_csv(os.path.join(file_dir, 'data/wehi_pains.csv'), names=['smarts', 'names'])
 _filters = [Chem.MolFromSmarts(x) for x in _mcf.append(_pains, sort=True)['smarts'].values]
 
 
-inf = open("./data/pains.txt", "r")
+inf = open(os.path.join(file_dir, 'data/pains.txt'), "r")
 sub_strct = [ line.rstrip().split(" ") for line in inf ]
 smarts = [ line[0] for line in sub_strct]
 desc = [ line[1] for line in sub_strct]

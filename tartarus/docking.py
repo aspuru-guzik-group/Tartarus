@@ -13,7 +13,7 @@ import itertools
 import argparse
 import multiprocessing    
 
-from filter_ import process_molecule 
+from .filter_ import process_molecule 
 
 def check_energy(lig_): 
     """
