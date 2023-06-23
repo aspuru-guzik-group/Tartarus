@@ -8,14 +8,6 @@ PCE
 
 .. autofunction:: get_properties
 
-.. autoclass:: SurrogateModel
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-   .. automethod:: __init__
-
-.. autofunction:: get_surrogate_properties
 
 TADF
 ----
@@ -30,11 +22,7 @@ Docking
 
 .. currentmodule:: tartarus.docking
 
-.. autofunction:: get_1syh_score
-
-.. autofunction:: get_6y2f_score
-
-.. autofunction:: get_4lde_score
+.. autofunction:: perform_calc_single
 
 Reactivity
 ----------
