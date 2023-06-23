@@ -1,74 +1,68 @@
-[![Documentation Status](https://readthedocs.org/projects/tartarus/badge/?version=latest)](https://tartarus.readthedocs.io/en/latest/?badge=latest)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
 # Tartarus: Practical and Realistic Benchmarks for Inverse Molecular Design
 
 This repository contains the code and results for the paper [Tartarus, an open-source collection of benchmarks for evaluation of a generative model](https://arxiv.org/abs/2209.12487).
 
-## Benchmarking with Tartarus
+Total installation time: ~15-20mins. 
 
-### Benchmarking with Docker
+## Installing XTB and CREST
 
-To run the Tartarus benchmark we recommend using the provided Docker container. Optionally, we also provide instructions to building and running the benchmark locally. The following directions will walk you through setup and evaluation. You will need to have Docker installed on your machine. Once you have Docker installed, you can follow these steps:
+The task of designing organic photovoltaics and emitters will require the use of [**XTB**](https://github.com/grimme-lab/xtb), a program package of semi-empirical quantum mechanical methods, and [**CREST**](https://github.com/grimme-lab/crest), a utility of xtb used to sample molecular conformers. 
 
-1. Write the SMILES to be evaluated to a CSV file with a column header `smiles`.
-
-2. Pull the latest Tartarus Docker image: 
-
-``` bash
-    docker pull johnwilles/tartarus:latest
-```
-
-3. Run the Docker container with the directory of your data mounted, the benchmark mode and the CSV input filename: 
-
+The binaries are provided in [here](https://github.com/grimme-lab/xtb/releases). Place in home directory, and the software can be sourced using
 ```bash
-    docker run --rm -it -v ${LOCAL_PATH_TO_DATA}:/data ac/tartarus:latest --mode ${BENCHMARK_MODE} --input_filename ${INPUT_FILENAME}
+export XTBHOME=${HOME}/xtb
+export PATH=${PATH}:${XTBHOME}/bin
+export XTBPATH=${XTBHOME}/share/xtb:${XTBHOME}:${HOME}
+export MANPATH=${MANPATH}:${XTBHOME}/share/man
 ```
 
-4. The output file will be written to the same directory by default with the filename `output.csv`. 
+## Installing SMINA
+
+The task of designing molecules that dock to proteins requires the use of [**SMINA**](https://sourceforge.net/projects/smina/), a method for calcualte docking scores of ligands onto solved structures (proteins). The binary file is already included in the repository, in `tartarus/docking_structures/smina.static`.
 
 
-### Installing from Source
+## Packages required
+Use `python >= 3.8`. We recommend using a conda environment for the installation of 
+- rdkit >= 2021.03.3
+- xtb-python >= 20.1
+- openbabel == 3.1.1
+<!-- - xtb == 6.4.1
+- xorg-libxrender == 0.9.10 -->
 
-To install Tartarus locally, we recommend using the provided Conda environment definition.
+Required packages:
+- numpy >= 1.22.3
+- pandas >= 1.4.3 
+- torch == 1.12.0
+- pyscf == 2.0.1
+- morfeus-ml >= 0.7.1
+- geometric == 0.9.7.2
+- pyberny == 0.6.3
+- loguru == 0.6.0
+- geodesic-interpolate == 1.0.0 \
+(`pip install -i https://test.pypi.org/simple/ geodesic-interpolate`)
+- polanyi == 0.0.1 \
+(`pip install git+https://github.com/kjelljorner/polanyi`)
+<!-- - selfies == 1.0.3
+- scikit-learn >= 1.1.1 
+- h5py == 3.7.0
+- wurlitzer == 3.0.2
+- sqlalchemy >= 1.4.13 -->
 
-1. Clone the Tartarus repository.
 
-```bash
-    git clone git@github.com:aspuru-guzik-group/Tartarus.git
-```
-
-2. Create a Conda environment.
-
-```bash
-    conda env create -f environment.yml
-```
-
-3. Activate the tartarus Conda environment.
-
-```bash
-    conda activate tartarus
-```
-
-## Documentation
-
-Detailed documentation can be found here: [Tartarus Docs](https://tartarus.readthedocs.io/en/latest/)
-
-## Getting started 
-
-Below are some examples of how to load the datasets and use the fitness functions. For more details, you can also look at `example.py`. 
-
-### Datasets 
+## Datasets 
 
 All datasets are found in the [datasets](datasets/) directory. The arrows indicate the goal (&#8593; = maximization, &#8595; = minimization). 
 
 |Task | Dataset name       | # of smiles |  Columns in file ||||||
 |---|--------------------|------------------|----|----|----|---|----|----|
-| Designing OPV | `hce.csv`          | 24,953         | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)  |  Combined objective (&#8593;) | PCE<sub>PCBM</sub> -SAS (&#8593;) | PCE<sub>PCDTBT</sub> -SAS (&#8593;) | 
-| Designing OPV | `unbiased_hce.csv` | 1,000          | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)   | Combined objective (&#8593;) | ||
+| Designing OPV | `hce.csv`          | 24,953         | PCE<sub>PCBM</sub> -SAS (&#8593;) | PCE<sub>PCDTBT</sub> -SAS (&#8593;) | 
 | Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) |  | ||
 | Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8595;) | 4LDE (&#8595;) |  | | |
 | Designing chemical reaction substrates | `reactivity.csv`      | 60,828          | 	Activation energy &Delta;E<sup>&#8225;</sup> (&#8595;)   |  	Reaction energy &Delta;E<sub>r</sub> (&#8595;)  | &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)  |  - &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)    |     | |
+
+## Getting started 
+
+Below are some examples of how to load the datasets and use the fitness functions. For more details, you can also look at `example.py`. 
 
 ### Designing organic photovoltaics
 
@@ -135,6 +129,7 @@ from tartarus import reactivity
 Ea, Er, sum_Ea_Er, diff_Ea_Er = reactivity.get_properties(smi)
 ```
 
+
 ### Results
 Our results for running the corresponding benchmarks can be found here: 
 - Design of Protein Ligands: https://drive.google.com/file/d/1d_4mg1Eb7HrUJ2L7A8kFtld-TmPmOKlJ/view?usp=sharing
@@ -153,12 +148,3 @@ out in person: (akshat98[AT]stanford[DOT]edu, robert[DOT]pollice[AT]gmail[DOT]co
 ## License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
-
-
-
-
-
-
-
-
-
