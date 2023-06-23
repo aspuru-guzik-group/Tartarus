@@ -1,241 +1,277 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jun  9 12:58:37 2023
+
+@author: aksha
+"""
+
 import os 
-import time 
-import multiprocessing
-import inspect
-import tempfile
-from pathlib import Path
-from .utils import run_command
+import uuid
+import time
+import subprocess
+import itertools
+import argparse
+import multiprocessing    
 
-from rdkit import Chem 
-from rdkit.Chem import MolFromSmiles
-from rdkit.Chem.Crippen import MolLogP
-from rdkit.Chem.Descriptors import ExactMolWt
-from rdkit.Chem.Lipinski import NumHAcceptors, NumHDonors
-# from filter_ import maximum_ring_size, filter_phosphorus, substructure_violations
+from filter_ import process_molecule 
 
-from rdkit.Chem import MolFromSmiles as smi2mol
-import rdkit.Chem.rdmolops as rdcmo
-import rdkit.Chem.Descriptors as rdcd
-import rdkit.Chem.rdMolDescriptors as rdcmd
-
-import rdkit.Chem as rdc
-
-
-def lipinski_filter(smiles):
-    mol = MolFromSmiles(smiles)
+def check_energy(lig_): 
+    """
+    Check the quality of a generated structure by computing its total energy using the Open Babel obenergy tool.
+    Parameters:
+        lig_ (str): the name of the ligand file in PDBQT format.
+    Returns:
+        total_energy (float): the computed total energy of the ligand in Kcal/mol.
+    """
+    # Check the quality of generated structure (some post-processing quality control):
     try: 
-        return MolLogP(mol) <= 5 and NumHAcceptors(mol) <= 10 and NumHDonors(mol) <= 5 and 100 <= ExactMolWt(mol) <= 500
+        ob_cmd = ['obenergy', lig_]
+        command_obabel_check = subprocess.run(ob_cmd, capture_output=True)
+        command_obabel_check = command_obabel_check.stdout.decode("utf-8").split('\n')[-2]
+        total_energy         = float(command_obabel_check.split(' ')[-2])
     except: 
-        return False
+        total_energy = 10000 # Calculation has failed. 
+        
+    return total_energy
+
+
     
+
+def run_docking_1syh(lig_location, out_location, method='qvina'): 
+    """
+    Perform molecular docking with a specific methods (QuickVina/Smina) on the 1SYH protein. 
+    An exhaustiveness of 10 is used for the QuickVina calculations, while an 
+    exhaustivesness of 100 is used for a smina calculation 
+
+    Parameters
+    ----------
+    method : str, The calculation type to be run qvina/smina 
+
+    Returns
+    -------
+    (float) Docking score.
+    """
+    if method == 'qvina': 
+        command_run = subprocess.run(["./data/qvina", "--receptor", "./docking_structures/1syh/prot.pdbqt", "--ligand", lig_location, "--center_x", "21.492800140380858", "--center_y", "13.457733376820881", "--center_z", "23.175899950663247", "--size_x", "20", "--size_y", "20", "--size_z", "20", "--exhaustiveness", "10", "--out", out_location], capture_output=True)
+    elif method == 'smina': 
+        command_run = subprocess.run(["./data/smina", "--receptor", "./docking_structures/1syh/prot.pdbqt", "--ligand", lig_location, "--center_x", "21.492800140380858", "--center_y", "13.457733376820881", "--center_z", "23.175899950663247", "--size_x", "20", "--size_y", "20", "--size_z", "20", "--exhaustiveness", "100", "--out", out_location], capture_output=True)
+    else: 
+        raise Exception('Possible docking softwares: qvina/smina')
+
+    # Ensure the pose of the output molecule is not broken: 
+    pose_energy = check_energy(out_location)
+    if pose_energy == 10000: # broken molecule generated (docking failed)
+        return 10000
+        
+    # Obtain the docking score: 
+    command_run = command_run.stdout.decode("utf-8").split('\n')
+
+    docking_score = []
+    for item in command_run: 
+        line_split = item.split(' ')
+        line_split = [x for x in line_split if x != '']
+        if len(line_split) == 4: 
+            try: 
+                _ = float(line_split[0])
+                vr_2 = float(line_split[1])
+                _ = float(line_split[2])
+                _ = float(line_split[3])
+                docking_score.append(vr_2)
+            except: 
+                continue
+    docking_score = min(docking_score)
+
+    return docking_score
+
+
+def run_docking_4lde(lig_location, out_location, method='qvina'): 
+    """
+    Perform molecular docking with a specific methods (QuickVina/Smina) on the 4LDE protein. 
+    An exhaustiveness of 10 is used for the QuickVina calculations, while an 
+    exhaustivesness of 100 is used for a smina calculation 
+
+    Parameters
+    ----------
+    method : str, The calculation type to be run qvina/smina 
+
+    Returns
+    -------
+    (float) Docking score.
+    """
+    if method == 'qvina': 
+        command_run = subprocess.run(["./data/qvina", "--receptor", "./docking_structures/4lde/prot.pdbqt", "--ligand", lig_location, "--center_x", "-2.942962976793448", "--center_y", "-12.915592617458767", "--center_z", "-50.99233344749168", "--size_x", "20", "--size_y", "20", "--size_z", "20", "--exhaustiveness", "10", "--out", out_location], capture_output=True)
+    elif method == 'smina': 
+        command_run = subprocess.run(["./data/smina", "--receptor", "./docking_structures/4lde/prot.pdbqt", "--ligand", lig_location, "--center_x", "-2.942962976793448", "--center_y", "-12.915592617458767", "--center_z", "-50.99233344749168", "--size_x", "20", "--size_y", "20", "--size_z", "20", "--exhaustiveness", "100", "--out", out_location], capture_output=True)
+    else: 
+        raise Exception('Possible docking softwares: qvina/smina')
+
+    # Ensure the pose of the output molecule is not broken: 
+    pose_energy = check_energy(out_location)
+    if pose_energy == 10000: # broken molecule generated (docking failed)
+        return 10000
+        
+    # Obtain the docking score: 
+    command_run = command_run.stdout.decode("utf-8").split('\n')
+
+    docking_score = []
+    for item in command_run: 
+        line_split = item.split(' ')
+        line_split = [x for x in line_split if x != '']
+        if len(line_split) == 4: 
+            try: 
+                _ = float(line_split[0])
+                vr_2 = float(line_split[1])
+                _ = float(line_split[2])
+                _ = float(line_split[3])
+                docking_score.append(vr_2)
+            except: 
+                continue
+    docking_score = min(docking_score)
+
+    return docking_score
+
+
+def run_docking_6y2f(lig_location, out_location, method='qvina'): 
+    """
+    Perform molecular docking with a specific methods (QuickVina/Smina) on the 6Y2F protein. 
+    An exhaustiveness of 10 is used for the QuickVina calculations, while an 
+    exhaustivesness of 100 is used for a smina calculation 
+
+    Parameters
+    ----------
+    method : str, The calculation type to be run qvina/smina 
+
+    Returns
+    -------
+    (float) Docking score.
+    """
+    if method == 'qvina': 
+        command_run = subprocess.run(["./datasets/qvina", "--receptor", "./docking_structures/6y2f/prot.pdbqt", "--ligand", lig_location, "--center_x", "11.026168696851615", "--center_y", "-0.6082891440804464", "--center_z", "20.840999947973046", "--size_x", "10", "--size_y", "10", "--size_z", "10", "--exhaustiveness", "10", "--out", out_location], capture_output=True)
+    elif method == 'smina': 
+        command_run = subprocess.run(["./datasets/smina", "--receptor", "./docking_structures/6y2f/prot.pdbqt", "--ligand", lig_location, "--center_x", "11.026168696851615", "--center_y", "-0.6082891440804464", "--center_z", "20.840999947973046", "--size_x", "10", "--size_y", "10", "--size_z", "10", "--exhaustiveness", "100", "--out", out_location], capture_output=True)
+    else: 
+        raise Exception('Possible docking softwares: qvina/smina')
+
+    # Ensure the pose of the output molecule is not broken: 
+    pose_energy = check_energy(out_location)
+    if pose_energy == 10000: # broken molecule generated (docking failed)
+        return 10000
+        
+    # Obtain the docking score: 
+    command_run = command_run.stdout.decode("utf-8").split('\n')
+
+    docking_score = []
+    for item in command_run: 
+        line_split = item.split(' ')
+        line_split = [x for x in line_split if x != '']
+        if len(line_split) == 4: 
+            try: 
+                _ = float(line_split[0])
+                vr_2 = float(line_split[1])
+                _ = float(line_split[2])
+                _ = float(line_split[3])
+                docking_score.append(vr_2)
+            except: 
+                continue
+    docking_score = min(docking_score)
+
+    return docking_score
+
+
+def generate_unique_file_name(base_name, extension):
+    timestamp = int(time.time() * 1000)
+    unique_id = uuid.uuid4().hex
+    file_name = f"{base_name}_{timestamp}_{unique_id}.{extension}"
+    return file_name
+
+
+def perform_calc_single(smi, receptor_type, docking_program='qvina'): 
+    """
+    Performs docking calculations on a single molecule-receptor pair.
     
-def maximum_ring_size(mol):
-    """
-    Calculate maximum ring size of molecule
-    """
-    cycles = mol.GetRingInfo().AtomRings()
-    if len(cycles) == 0:
-        maximum_ring_size = 0
-    else:
-        maximum_ring_size = max([len(ci) for ci in cycles])
-    return maximum_ring_size
-
-
-def substructure_violations(mol):
-    """
-    Check for substructure violates
-    Return True: contains a substructure violation
-    Return False: No substructure violation
-    """
-    violation = False
-    # forbidden_fragments = ['*1=**=*1', '*1*=*=*1', '*1~*=*1', '[F,Cl,Br]C=[O,S,N]','[Cl,Br]-C-C=[O,S,N]','[N,n,S,s,O,o]C[F,Cl,Br]','[I]','*=[S,s;!R]', '[S&X3]', '[S&X4]', '[S&X5]', '[S&X6]', '[N+]', '[B,N,n,O,S]~[F,Cl,Br,I]', '*=*=*', '*#*', '[O,o,S,s]~[O,o,S,s]', '[N,n,O,o,S,s]~[N,n,O,o,S,s]~[N,n,O,o,S,s]', '[C,c]~N=,:[O,o,S,s;!R]', '[N,n,O,o,S,s]~[N,n,O,o,S,s]~[C,c]=,:[O,o,S,s,N,n;!R]', '*=[NH]', '*=N-[*;!R]', '*~[N,n,O,o,S,s]-[N,n,O,o,S,s;!R]']
-    forbidden_fragments = [
-        "*1=**=*1",
-        "*1*=*=*1",
-        "*1~*=*1",
-        "[F,Cl,Br]C=[O,S,N]",
-        "[Br]-C-C=[O,S,N]",
-        "[N,n,S,s,O,o]C[F,Cl,Br]",
-        "[I]",
-        "[S&X3]",
-        "[S&X5]",
-        "[S&X6]",
-        "[B,N,n,O,S]~[F,Cl,Br,I]",
-        "*=*=*=*",
-        "*=[NH]",
-        "[P,p]~[F,Cl,Br]",
-        "SS", 
-        "C#C", 
-        "C=C=C"
-    ]
-
-    for ni in range(len(forbidden_fragments)):
-
-        if mol.HasSubstructMatch(rdc.MolFromSmarts(forbidden_fragments[ni])) == True:
-            violation = True
-            break
-        else:
-            continue
-
-    return violation
-
-
-def filter_by_pattern(mol, pattern):
-    """
-    Check for presence of SMARTS pattern
-    Return True: contains the pattern
-    Return False: does not contain the pattern
-    """
-    violation = False
-
-    if mol.HasSubstructMatch(rdc.MolFromSmarts(pattern)) == True:
-        violation = True
-
-    return violation
-
-def filter_phosphorus(mol):
-    """
-    Check for presence of phopshorus fragment
-    Return True: contains proper phosphorus
-    Return False: contains improper phosphorus
-    """
-    violation = False
-
-    if mol.HasSubstructMatch(rdc.MolFromSmarts("[P,p]")) == True:
-        if mol.HasSubstructMatch(rdc.MolFromSmarts("*~[P,p](=O)~*")) == False:
-            violation = True
-
-    return violation
+    This function takes a molecule (in SMILES format), a receptor type, and an optional docking program 
+    (default: 'qvina' / 'smina'). It generates a 3D structure for the molecule, performs energy check, and 
+    runs a docking simulation with the receptor specified. It returns the docking score.
     
+    Parameters
+    ----------
+    smi : str
+        The SMILES string of the molecule.
     
-def apply_filters(smi):
-
+    receptor_type : str
+        The type of the receptor. This function currently supports '1syh', '4lde', and '6y2f'.
+    
+    docking_program : str, optional
+        The docking software to be used for the docking calculation. Default is 'qvina'.
+    
+    Returns
+    -------
+    float
+        The docking score of the molecule with the receptor. If the process fails or the 
+        molecule's energy is too high, the function returns a value of 10^4.
+    
+    Raises
+    ------
+    It does not raise any exceptions, but rather catches them and returns a docking score of 10^4.
+    
+    Notes
+    -----
+    The function employs Open Babel ('obabel') for the 3D structure generation of the molecule 
+    and the specified docking program for the docking process. Intermediate files (pdbqt format) 
+    created during the execution are deleted before the function returns.
+    """
     try: 
-        mol = smi2mol(smi)
-        # Added after GDB-13 was filtered to get rid charged molecules
-        if rdcmo.GetFormalCharge(mol) != 0:
-            return False
-        # Added after GDB-13 was filtered to get rid radicals
-        elif rdcd.NumRadicalElectrons(mol) != 0:
-            return False
-        # Filter by bridgehead atoms
-        elif rdcmd.CalcNumBridgeheadAtoms(mol) > 2:
-            return False
-        # Filter by ring size
-        elif maximum_ring_size(mol) > 8:
-            return False
-        # Filter by proper phosphorus
-        elif filter_phosphorus(mol):
-            return False
-        elif substructure_violations(mol):
-            return False
+    
+        pass_filt =  process_molecule(smi)
+        if pass_filt[1] == 'Fail': 
+            return 10**4
+    
+        output_filename = generate_unique_file_name('lig', 'pdbqt')
+        # print('smi: {} fname: {}'.format(smi, output_filename))
+        cmd = ["obabel", "-ismi","-:" + smi,"-O", output_filename, "--gen3d"]
+        subprocess.run(cmd, timeout=20)
+        
+        # Ensure a stable molecule: 
+        lig_energy = check_energy(output_filename)
+    
+        # Specifying docking input file & output file: 
+        lig_location = output_filename
+        out_location = generate_unique_file_name('pose', 'pdbqt')
+        
+        # Perform docking: 
+        if lig_energy < 10000: 
+            if receptor_type == '1syh': 
+                score_ = run_docking_1syh(lig_location, out_location, method=docking_program)
+            if receptor_type == '4lde': 
+                score_ = run_docking_4lde(lig_location, out_location, method=docking_program)
+            if receptor_type == '6y2f': 
+                score_ = run_docking_6y2f(lig_location, out_location, method=docking_program)
         else: 
-            return True 
+            return 10**4
+    
+                
+        os.system('rm {} {}'.format(output_filename, out_location))
+        
     except: 
-        return False 
-
-
-def get_score(smi, docking_target='1syh', verbose=False, scratch='/tmp'): 
-    # Create and switch to temporary directory
-    owd = Path.cwd()
-    scratch_path = Path(scratch)
-    tmp_dir = tempfile.TemporaryDirectory(dir=scratch_path)
-    os.chdir(tmp_dir.name)
-
-    system = lambda x: run_command(x, verbose)
-    try: 
-        with open('test.smi', 'w') as f: 
-            f.writelines(smi)
-        system('obabel test.smi --gen3D -O hit1.pdb')
-        
-        cpu_count = multiprocessing.cpu_count()
-
-        path = os.path.join(
-            os.path.dirname(inspect.getfile(apply_filters)), 
-            'docking_structures'
-        )
-
-        command = (
-            f'{path}/smina.static -r {path}/{docking_target}/prot.pdb '
-            f'-l hit1.pdb --autobox_ligand {path}/{docking_target}/lig_.pdb '
-            '--autobox_add 2 --scoring vina -o dock_1.pdb --log dock_1.log '
-            f'--cpu {cpu_count} --num_modes 1 --exhaustiveness 10'
-        )
-        system(command)
-        
-        # Read in the results:  
-        with open('./dock_1.log', 'r') as f: 
-            lines = f.readlines()
-        lines = lines[25: ]
-        
-        scores = []
-        for line in lines: 
-            A = line.split(' ')
-            A = [x for x in A if x != '']
-            scores.append(float(A[1]))
-    except: 
-        scores = 10**4
-
-    # Remove temporary directory
-    os.chdir(owd)
-    tmp_dir.cleanup()
-    
-        
-    # Delete log files: 
-    system('rm dock_1.log dock_1.pdb test.smi hit1.pdb')
-    
-    return min(scores)
-
-
-def get_1syh_score(smi: str, verbose: bool = False): 
-    """Get the 1syh score for a given SMILES string
-    
-    :param smi: `str` SMILES string
-    :param verbose: `str` Print out the command line output
-    :return: `float` 1syh score
-    """
-
-    if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
-        score = get_score(smi=smi, docking_target='1syh', verbose=verbose) # '4lde', '6y2f', '1syh'
-        return score # MINUS SIGN FOR OPTIMIZATION! 
-    else: 
+        os.system('rm {} {}'.format(output_filename, out_location))
         return 10**4
 
-def get_6y2f_score(smi: str, verbose: bool = False): 
-    """Get the 6y2f score for a given SMILES string
+    return score_
 
-    :param smi: `str` SMILES string
-    :param verbose: `str` Print out the command line output
 
-    :return: `float` 6y2f score
-    """
-    if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
-        score = get_score(smi=smi, docking_target='6y2f', verbose=verbose) # '4lde', '6y2f', '1syh'
-        return score # MINUS SIGN FOR OPTIMIZATION! 
-    else: 
-        return 10**4
-
-def get_4lde_score(smi: str, verbose: bool = False): 
-    """Get the 4lde score for a given SMILES string
+if __name__ == '__main__': 
     
-    :param smi: `str` SMILES string
-    :param verbose: `str` Print out the command line output
-    :return: 4lde score
-    """
-    if apply_filters(smi) == True and lipinski_filter( smi ) == True: 
-        score = get_score(smi=smi, docking_target='4lde', verbose=verbose) # '4lde', '6y2f', '1syh'
-        return score # MINUS SIGN FOR OPTIMIZATION! 
-    else: 
-        return 10**4
+    smi = 'C1=NC2=C(N=C1)C(=CC=N2)C1=CC=NC2=C1N=CN=C2'
+    
+    # Run calculation for the 1syh recepotor: 
+    score = perform_calc_single(smi, '1syh', docking_program='qvina')
 
-if __name__ == '__main__':        
-    smi = 'OC1=CC2=C(C=CC=C2)C(=C1)C1=CC(O)=CC2=C1C=CN=C2'
-    score = get_4lde_score(smi)
-    print(f'4lde score: {score}')
+    # Run calculation for the 4lde recepotor: 
+    score = perform_calc_single(smi, '4lde', docking_program='qvina')
 
-    score = get_6y2f_score(smi)
-    print(f'6y2f score: {score}')
+    # Run calculation for the 6y2f recepotor: 
+    score = perform_calc_single(smi, '6y2f', docking_program='qvina')
 
-    score = get_1syh_score(smi)
-    print(f'1syh score: {score}')
+
+
 
