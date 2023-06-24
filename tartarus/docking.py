@@ -15,6 +15,7 @@ import multiprocessing
 
 from .filter_ import process_molecule 
 
+
 def check_energy(lig_): 
     """
     Check the quality of a generated structure by computing its total energy using the Open Babel obenergy tool.
@@ -146,9 +147,9 @@ def run_docking_6y2f(lig_location, out_location, method='qvina'):
     (float) Docking score.
     """
     if method == 'qvina': 
-        command_run = subprocess.run(["./datasets/qvina", "--receptor", "./docking_structures/6y2f/prot.pdbqt", "--ligand", lig_location, "--center_x", "11.026168696851615", "--center_y", "-0.6082891440804464", "--center_z", "20.840999947973046", "--size_x", "10", "--size_y", "10", "--size_z", "10", "--exhaustiveness", "10", "--out", out_location], capture_output=True)
+        command_run = subprocess.run(["./data/qvina", "--receptor", "./docking_structures/6y2f/prot.pdbqt", "--ligand", lig_location, "--center_x", "11.026168696851615", "--center_y", "-0.6082891440804464", "--center_z", "20.840999947973046", "--size_x", "10", "--size_y", "10", "--size_z", "10", "--exhaustiveness", "10", "--out", out_location], capture_output=True)
     elif method == 'smina': 
-        command_run = subprocess.run(["./datasets/smina", "--receptor", "./docking_structures/6y2f/prot.pdbqt", "--ligand", lig_location, "--center_x", "11.026168696851615", "--center_y", "-0.6082891440804464", "--center_z", "20.840999947973046", "--size_x", "10", "--size_y", "10", "--size_z", "10", "--exhaustiveness", "100", "--out", out_location], capture_output=True)
+        command_run = subprocess.run(["./data/smina", "--receptor", "./docking_structures/6y2f/prot.pdbqt", "--ligand", lig_location, "--center_x", "11.026168696851615", "--center_y", "-0.6082891440804464", "--center_z", "20.840999947973046", "--size_x", "10", "--size_y", "10", "--size_z", "10", "--exhaustiveness", "100", "--out", out_location], capture_output=True)
     else: 
         raise Exception('Possible docking softwares: qvina/smina')
 
