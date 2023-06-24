@@ -12,6 +12,7 @@ dependencies:
   - xtb-python=20.2
   - crest=2.12
   - setuptools
+  - pandas=1.5.3
   - pip:
     - numpy
     - pyscf

@@ -1,6 +1,6 @@
 FROM continuumio/miniconda3:latest
 
-RUN apt-get update && apt-get upgrade
+RUN apt-get update -y && apt-get upgrade -y
 
 SHELL ["/bin/bash", "--login", "-c"]
 
@@ -19,6 +19,9 @@ RUN pip install pytest
 
 RUN mkdir /data
 COPY . .
+
+RUN chmod 777 tartarus/data/qvina
+RUN chmod 777 tartarus/data/smina
 
 SHELL ["conda", "run", "-n", "tartarus", "/bin/bash", "-c"]
 ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "tartarus", "python", "/benchmark/benchmark.py"]

@@ -17,10 +17,6 @@ class ResultBase():
 
 @dataclass
 class PCEResult(ResultBase):
-    dipm: float
-    gap: float
-    lumo: float
-    combined: float
     pce_pcbm_sas: float
     pce_pcdtbt_sas: float
 
@@ -72,7 +68,7 @@ def benchmark_smile(smile, mode, verbose):
     elif mode == 'tadf':
         result = TADFResult(smile, *tadf.get_properties(smile, verbose=verbose))
     elif mode == 'docking':
-        result = DockingResult(smile, docking.get_1syh_score(smile, verbose=verbose), docking.get_6y2f_score(smile, verbose=verbose), docking.get_4lde_score(smile, verbose=verbose))
+        result = DockingResult(smile, docking.perform_calc_single(smile, '1syh', docking_program='qvina'), docking.perform_calc_single(smile, '6y2f', docking_program='qvina'), docking.perform_calc_single(smile, '4lde', docking_program='qvina'))
     elif mode == 'reactivity':
         result = ReactivityResult(smile, *reactivity.get_properties(smile, verbose=verbose))
     else:

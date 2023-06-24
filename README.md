@@ -22,7 +22,7 @@ To run the Tartarus benchmark we recommend using the provided Docker container. 
 3. Run the Docker container with the directory of your data mounted, the benchmark mode and the CSV input filename: 
 
 ```bash
-    docker run --rm -it -v ${LOCAL_PATH_TO_DATA}:/data ac/tartarus:latest --mode ${BENCHMARK_MODE} --input_filename ${INPUT_FILENAME}
+    docker run --rm -it -v ${LOCAL_PATH_TO_DATA}:/data johnwilles/tartarus:latest --mode ${BENCHMARK_MODE} --input_filename ${INPUT_FILENAME}
 ```
 
 4. The output file will be written to the same directory by default with the filename `output.csv`. 
@@ -64,8 +64,7 @@ All datasets are found in the [datasets](datasets/) directory. The arrows indica
 
 |Task | Dataset name       | # of smiles |  Columns in file ||||||
 |---|--------------------|------------------|----|----|----|---|----|----|
-| Designing OPV | `hce.csv`          | 24,953         | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)  |  Combined objective (&#8593;) | PCE<sub>PCBM</sub> -SAS (&#8593;) | PCE<sub>PCDTBT</sub> -SAS (&#8593;) | 
-| Designing OPV | `unbiased_hce.csv` | 1,000          | Dipole moment (&#8593;)  | HOMO-LUMO gap (&#8593;) | LUMO (&#8595;)   | Combined objective (&#8593;) | ||
+| Designing OPV | `hce.csv`          | 24,953         | PCE<sub>PCBM</sub> -SAS (&#8593;) | PCE<sub>PCDTBT</sub> -SAS (&#8593;) | 
 | Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) |  | ||
 | Designing drugs | `docking.csv`      | 152,296          | 1SYH (&#8595;) | 6Y2F (&#8595;) | 4LDE (&#8595;) |  | | |
 | Designing chemical reaction substrates | `reactivity.csv`      | 60,828          | 	Activation energy &Delta;E<sup>&#8225;</sup> (&#8595;)   |  	Reaction energy &Delta;E<sub>r</sub> (&#8595;)  | &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)  |  - &Delta;E<sup>&#8225;</sup> + &Delta;E<sub>r</sub> (&#8595;)    |     | |
@@ -153,12 +152,4 @@ out in person: (akshat98[AT]stanford[DOT]edu, robert[DOT]pollice[AT]gmail[DOT]co
 ## License
 
 [Apache License 2.0](https://choosealicense.com/licenses/apache-2.0/)
-
-
-
-
-
-
-
-
 
