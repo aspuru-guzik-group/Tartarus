@@ -62,7 +62,7 @@ Below are some examples of how to load the datasets and use the fitness function
 
 All datasets are found in the [datasets](datasets/) directory. The arrows indicate the goal (&#8593; = maximization, &#8595; = minimization). 
 
-|Task | Dataset name       | # of smiles |  Columns in file ||||
+|Task | Dataset name       | # of smiles |  Columns in file ||||||
 |---|--------------------|------------------|----|----|----|---|----|----|
 | Designing OPV | `hce.csv`          | 24,953         | PCE<sub>PCBM</sub> -SAS (&#8593;) | PCE<sub>PCDTBT</sub> -SAS (&#8593;) | 
 | Designing emitters | `gdb13.csv`        | 403,947          | Singlet-triplet gap (&#8595;) | Oscillator strength (&#8593;) | Multi-objective (&#8593;) |  | ||
