@@ -62,6 +62,13 @@ To install Tartarus locally, you will need to have Conda installed on your machi
     $ echo "export XTBHOME=$CONDA_PREFIX" > $CONDA_PREFIX/etc/conda/activate.d/env.sh
     $ echo "source $CONDA_PREFIX/share/xtb/config_env.bash" >> $CONDA_PREFIX/etc/conda/activate.d/env.sh
 
+6. Ensure that docking task executables have the correct permissions.
+
+.. code-block:: console
+
+    $ chmod 777 tartarus/data/qvina
+    $ chmod 777 tartarus/data/smina
+
 Common Issues
 *************
 

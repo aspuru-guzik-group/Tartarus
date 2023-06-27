@@ -50,6 +50,15 @@ To install Tartarus locally, we recommend using the provided Conda environment d
     conda activate tartarus
 ```
 
+4. Ensure that docking task executables have the correct permissions.
+
+```
+    chmod 777 tartarus/data/qvina
+    chmod 777 tartarus/data/smina
+```
+
+> **Note:** These executables are only compatible with Linux.
+
 ## Documentation
 
 Detailed documentation can be found here: [Tartarus Docs](https://tartarus.readthedocs.io/en/latest/)
