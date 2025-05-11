@@ -298,7 +298,7 @@ def get_properties(smi: str, verbose: bool=False, scratch='/tmp'):
         run_time = time.time() - start_time
         
         if results_[1] <= 0.0 or results_[0]<=0.0 or results_[2]<=0.0: 
-            std, osc, combined = -10**4, -10**4, -10**4
+            st, osc, combined = -10**4, -10**4, -10**4
         else:
             st, osc, combined = -results_[1], results_[2], results_[2]-results_[1]-np.abs(results_[0]-3.2)
             
